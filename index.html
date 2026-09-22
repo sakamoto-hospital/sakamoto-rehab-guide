@@ -1,441 +1,430 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="リハプラス さかもと（仮）。リハビリテーションに特化した短時間デイケアのご案内と、リアルタイムの空き状況。">
-  <title>リハプラス さかもと（仮）｜空き状況のご案内</title>
-  <style>
-    :root{
-      --ink:#083f42;--deep:#004d4d;--green:#1b7a59;--cream:#faf9f3;--paper:#fffefa;
-      --line:#d6e2dc;--orange:#ee641e;--muted:#526d67;--shadow:0 6px 22px rgba(7,65,59,.06);
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:var(--cream);color:var(--ink);line-height:1.6;
-      font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif}
-    a{color:inherit}
-    img{max-width:100%}
-    .wrap{width:min(1180px,calc(100% - 48px));margin:auto}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="短時間デイケア リハプラス さかもと。リハビリテーションに特化した短時間の通所リハビリと、空き状況のご案内。2026年11月1日 開設。">
+<meta name="theme-color" content="#004d4d">
+<title>リハプラス さかもと｜空き状況のご案内</title>
+<style>
+/* ===========================================================
+   リハプラス さかもと｜ケアマネジャー向けページ
+   ★スマホで見る方がほとんどです。まずスマホの見た目で作り、
+     広い画面はあとから広げています（min-width のメディアクエリ）。
+   ★直すときによく触るところ
+     - 電話番号 ……… 一番下の <script> の TEL
+     - クールの時間 … 同じく <script> の COURSES
+     - 空き枠の数字 … assets/availability.json
+                      （スプレッドシートから自動更新できます。tools/availability-sync.md）
+   =========================================================== */
+:root{
+  --ink:#083f42;      /* 本文の濃い色 */
+  --deep:#004d4d;     /* 濃い緑（見出し・帯） */
+  --green:#1b7a59;    /* 差し色の緑 */
+  --cream:#faf9f3;    /* 背景のクリーム */
+  --paper:#fffefa;    /* カードの白 */
+  --line:#d8e3dd;     /* 罫線 */
+  --orange:#ee641e;   /* 送迎あり・強調 */
+  --muted:#4f6b65;    /* 補足の文字 */
+  --shadow:0 4px 16px rgba(7,65,59,.07);
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  /* ★ケアマネさんには年配の方もいます。本文は小さくしすぎない */
+  font:400 16.5px/1.75 -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+  color:var(--ink); background:var(--cream);
+  letter-spacing:.01em;   /* 日本語は詰めすぎると読みにくいので詰めない */
+}
+img{max-width:100%;height:auto;display:block}
+h1,h2,h3{margin:0;line-height:1.35;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
 
-    /* header */
-    .topbar{position:sticky;top:0;z-index:10;background:rgba(255,254,250,.93);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
-    .topbar .wrap{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:26px}
-    .brand{font-size:clamp(16px,2vw,21px);font-weight:900;letter-spacing:.015em}
-    .brand small{display:block;font-size:10px;color:#64807a;font-weight:700;letter-spacing:.1em}
-    .topnav{display:flex;align-items:center;gap:22px;font-size:13px;font-weight:800}
-    .topnav a{text-decoration:none;white-space:nowrap}
-    .topnav a.tel-mini{padding:9px 16px;border-radius:999px;background:var(--orange);color:#fff}
+.wrap{width:min(100% - 32px, 760px);margin-inline:auto}
+section{padding:38px 0}
+.kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--green);margin-bottom:8px}
+.h2{font-size:25px;font-weight:800;margin-bottom:12px}
+.lead{color:var(--muted);font-size:15.5px;margin-top:10px}
+.note{font-size:13.5px;color:var(--muted);line-height:1.7}
 
-    /* hero */
-    .hero{min-height:100vh;min-height:100svh;position:relative;display:flex;align-items:center;isolation:isolate;overflow:hidden}
-    .hero::before{content:"";position:absolute;inset:0;z-index:1;
-      background:linear-gradient(90deg,rgba(255,254,250,.94) 0%,rgba(255,254,250,.8) 30%,rgba(255,254,250,.12) 58%,rgba(255,254,250,0) 78%)}
-    .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 24%;z-index:0}
-    .hero-copy{position:relative;z-index:2;width:min(100%,620px);padding:78px 0}
-    .open{display:inline-flex;align-items:center;gap:9px;color:var(--orange);font-size:14px;font-weight:900;letter-spacing:.1em}
-    .open::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--orange)}
-    h1{margin:19px 0 16px;font-size:clamp(45px,6.5vw,78px);line-height:1.12;letter-spacing:-.075em;font-weight:900}
-    h1 span{display:block}
-    .hero-lead{margin:0;font-size:clamp(20px,2.3vw,29px);font-weight:800;line-height:1.55;letter-spacing:-.04em;text-shadow:0 1px 3px rgba(255,254,250,.85)}
-    .hero-lead b{display:block;color:#36726c;font-size:.78em}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
-    .button{display:inline-flex;min-height:54px;align-items:center;justify-content:center;gap:9px;
-      padding:13px 24px;border:1px solid var(--deep);border-radius:6px;background:var(--deep);color:#fff;
-      text-decoration:none;font-size:15px;font-weight:900;cursor:pointer}
-    .button.light{background:rgba(255,255,255,.86);color:var(--ink)}
-    .hero-note{margin:18px 0 0;color:#44625c;font-size:13px;font-weight:800;text-shadow:0 1px 2px rgba(255,254,250,.9)}
+/* ---------- ヒーロー ---------- */
+.hero{position:relative;padding:0;min-height:68svh;display:flex;align-items:flex-end;overflow:hidden}
+.hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 18%}
+/* 写真は上半分で見せて、文字がのる下半分は白でしっかり伏せる（チラシと同じ考え方） */
+.hero::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(255,255,255,.55) 0%,rgba(255,255,255,.12) 26%,rgba(255,255,255,.12) 40%,rgba(250,249,243,.97) 68%,#faf9f3 100%)}
+.hero-inner{position:relative;z-index:1;padding:26px 0 30px;width:100%}
+.open{display:inline-block;background:var(--orange);color:#fff;font-weight:800;font-size:13px;letter-spacing:.06em;padding:5px 12px;border-radius:999px}
+.hero h1{font-size:clamp(34px,9.5vw,52px);font-weight:800;margin-top:14px;color:var(--deep)}
+.hero .sub{margin-top:8px;font-size:17px;font-weight:600}
+.hero .name{margin-top:16px;display:inline-block;background:rgba(255,255,255,.9);border-radius:10px;padding:8px 13px;font-weight:700;font-size:15.5px;color:var(--deep)}
+.hero .name small{display:block;font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.06em}
+.hero-cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;
+  background:var(--deep);color:#fff;text-decoration:none;font-weight:700;font-size:17px;padding:16px;border-radius:12px;box-shadow:var(--shadow)}
 
-    /* generic section */
-    section{padding:96px 0}
-    .kicker{color:var(--orange);font-size:12px;font-weight:900;letter-spacing:.14em}
-    .section-title span{display:inline-block}
-    .section-title{margin:8px 0 12px;font-size:clamp(31px,4vw,50px);line-height:1.22;letter-spacing:-.065em}
-    .section-copy{margin:0;max-width:720px;color:var(--muted);font-weight:700;font-size:16px}
+/* ---------- 営業日（曜日の丸で見せる） ---------- */
+.opendays{background:var(--paper);border-block:1px solid var(--line);padding:30px 0}
+.days-row{display:flex;gap:6px;align-items:stretch;margin-top:6px}
+.day{flex:1;text-align:center;border-radius:10px;padding:10px 0 8px;background:var(--deep);color:#fff}
+.day b{display:block;font-size:17px;font-weight:700;line-height:1.2}
+.day span{display:block;font-size:11px;opacity:.85;margin-top:2px}
+.day.off{background:#eef1ef;color:#8d9c97}
+.sep{width:1px;background:var(--line);margin:4px 2px}
 
-    /* availability */
-    .availability{background:var(--paper)}
-    .availability-head{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:34px}
-    .updated{padding:12px 16px;border:1px solid var(--line);border-radius:9px;background:#f6faf7;font-size:13px;font-weight:800;color:#54716a}
-    .updated b{display:block;color:var(--deep);font-size:14px}
-    .availability-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-    .availability-slot{overflow:hidden;border:1px solid var(--line);border-radius:13px;background:#fff;box-shadow:var(--shadow)}
-    .availability-slot.send{border-color:#f0b479;background:#fff9f0}
-    .availability-slot-head{display:flex;align-items:center;justify-content:space-between;gap:13px;padding:18px 21px;border-bottom:1px solid var(--line)}
-    .availability-slot.send .availability-slot-head{background:#fff0db}
-    .availability-slot-head b{display:block;font-size:24px;line-height:1.2;letter-spacing:-.04em}
-    .availability-slot-head span{display:block;color:#4d706a;font-size:13px;font-weight:900}
-    .availability-slot-head .send-badge{margin:0;white-space:nowrap}
-    .day-pills{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;padding:14px}
-    .day-pill{min-height:68px;padding:8px 4px;border:1px solid #dfe9e2;border-radius:9px;background:#f7fbf8;color:var(--ink);
-      font:inherit;text-align:center;cursor:pointer;transition:background .18s,border-color .18s}
-    .day-pill:hover,.day-pill:focus-visible,.day-pill.selected{outline:none;border-color:#55a47c;background:#dff2e6}
-    .day-pill b{display:block;font-size:14px;line-height:1.1}
-    .day-pill span{display:block;margin-top:4px;color:#287651;font-size:11px;font-weight:900;line-height:1.1}
-    .day-pill.adjusting{cursor:default;opacity:.62}
-    .day-pill.adjusting span{color:#8a6b4d}
-    .selection-note{margin-top:24px;padding:20px 24px;border-radius:10px;background:var(--deep);color:#fff;font-weight:800}
-    .selection-note span{display:block;color:#cbe1da;font-size:13px;font-weight:700}
+/* ---------- 空き状況 ---------- */
+.slot{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 14px;margin-top:14px;box-shadow:var(--shadow)}
+.slot-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.slot-no{font-size:14px;font-weight:700;color:var(--green)}
+.slot-time{font-size:23px;font-weight:800;letter-spacing:-.02em}
+/* ★送迎の有無はいちばん見られるところ。帯ごと色を変えて一目で分かるようにする */
+.ride{width:100%;margin-top:10px;border-radius:9px;padding:9px 12px;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+.ride.yes{background:#fff1e6;color:#b8470f;border:1px solid #f4c3a0}
+.ride.no{background:#eef3f1;color:var(--muted);border:1px solid var(--line)}
+.ride svg{flex:none}
+.pills{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}
+.pill{appearance:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 4px;font:inherit;color:inherit;text-align:center;cursor:pointer}
+.pill b{display:block;font-size:16px;font-weight:700}
+.pill span{display:block;font-size:11.5px;color:var(--green);margin-top:2px;line-height:1.35}
+.pill.selected{border-color:var(--deep);background:#eaf3ef;box-shadow:inset 0 0 0 1px var(--deep)}
+.pill.full{opacity:.55;cursor:default}
+.pill.full span{color:var(--muted)}
+.updated{font-size:12.5px;color:var(--muted);margin-top:14px}
+.later{margin-top:14px;border:1px dashed var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--muted);background:rgba(255,255,255,.6)}
+.picked{margin-top:14px;background:var(--deep);color:#fff;border-radius:10px;padding:13px 15px;font-size:15px;font-weight:600}
+.picked:empty{display:none}
 
-    /* strength */
-    .care{background:#eff5f1}
-    .care-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:38px}
-    .care-card{padding:29px;background:var(--paper);border:1px solid #dce8e1;border-radius:13px}
-    .number{color:var(--orange);font-size:12px;font-weight:900;letter-spacing:.11em}
-    .care-card h3{margin:8px 0;font-size:24px;line-height:1.32;letter-spacing:-.055em}
-    .care-card p{margin:0;color:var(--muted);font-size:14px;font-weight:700}
-    .care-foot{margin:26px 0 0;padding:18px 22px;border:1px dashed #bcd3c6;border-radius:10px;color:#456a60;font-size:14px;font-weight:800;background:#f7fbf8}
+/* ---------- こんな方に ---------- */
+.who{background:var(--paper);border-block:1px solid var(--line)}
+.checks{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:9px}
+.checks li{display:flex;gap:10px;align-items:flex-start;font-weight:700;font-size:17px;background:var(--cream);border-radius:10px;padding:13px 14px}
+.checks li::before{content:"";flex:none;width:22px;height:22px;margin-top:2px;border-radius:50%;
+  background:var(--orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' d='M5 12.6l4.6 4.6L19 7.6'/%3E%3C/svg%3E") center/15px no-repeat}
 
-    /* self training */
-    .training{background:var(--paper)}
-    .training-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:44px;align-items:center}
-    .training .section-title{font-size:clamp(28px,3.2vw,41px)}
-    .training-photo{margin:0;overflow:hidden;border-radius:14px;background:#dcebe2;box-shadow:var(--shadow)}
-    .training-photo img{display:block;width:100%;height:100%;max-height:420px;object-fit:cover}
-    .gear{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0 0;padding:0;list-style:none}
-    .gear li{padding:16px 14px;border:1px solid var(--line);border-radius:11px;background:#f7fbf8;font-size:15px;font-weight:900;line-height:1.4}
-    .gear li span{display:block;margin-top:5px;color:#5c756f;font-size:12px;font-weight:700}
-    .rest-note{margin:22px 0 0;color:var(--muted);font-size:15px;font-weight:700}
+/* ---------- 強み（写真の上に文字） ---------- */
+.strength{position:relative;padding:0;overflow:hidden}
+.strength>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%}
+/* ★写真が見えなくならない濃さにする（濃くしすぎると「背景写真」の意味がなくなる） */
+.strength::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,42,42,.52),rgba(0,42,42,.8))}
+.strength-inner{position:relative;z-index:1;color:#fff;padding:40px 0}
+.strength-inner .kicker{color:#8fd3b5}
+.strength h2{font-size:26px;font-weight:800}
+.strength .lead{color:rgba(255,255,255,.88)}
+.steps3{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:10px}
+.steps3 li{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:11px;padding:13px 15px}
+.steps3 b{display:block;font-size:17px;font-weight:700}
+.steps3 span{display:block;font-size:14px;color:rgba(255,255,255,.82);margin-top:3px;line-height:1.65}
 
-    /* guide */
-    .guide{background:#eff5f1}
-    .guide-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:32px;align-items:stretch}
-    .guide-card{padding:36px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(145deg,#ffffff,#f0f8f4)}
-    .guide-card h3 span{display:inline-block}
-    .guide-card h3{margin:8px 0 20px;font-size:clamp(27px,3vw,38px);line-height:1.32;letter-spacing:-.06em}
-    .checks{display:grid;gap:13px;margin:0;padding:0;list-style:none}
-    .checks li{padding-left:32px;position:relative;font-size:16px;font-weight:800}
-    .checks li::before{content:"✓";position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;
-      background:var(--orange);color:#fff;text-align:center;line-height:22px;font-size:14px}
-    .guide-note{margin:24px 0 0;padding-top:19px;border-top:1px solid var(--line);color:#5b736d;font-size:14px;font-weight:700}
-    .flow{display:grid;gap:10px}
-    .flow-step{display:grid;grid-template-columns:38px 1fr;gap:14px;align-items:start;padding:15px 17px;border-radius:11px;background:#e8f4ed}
-    .flow-step b{width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;text-align:center;line-height:30px;font-size:14px}
-    .flow-step strong{display:block;font-size:16px;letter-spacing:-.03em}
-    .flow-step span{display:block;margin-top:2px;color:#4f6f68;font-size:13px;font-weight:700}
+/* ---------- 動作解析 ---------- */
+.motion figure{margin:0 0 16px}
+.motion img{border-radius:var(--radius);box-shadow:var(--shadow)}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.tag{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600}
+.nope{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 15px;font-size:14.5px;color:var(--muted)}
+.nope b{color:var(--ink)}
 
-    /* transport & bring */
-    .transport{background:#f4f0e8}
-    .transport-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
-    .pill{display:inline-block;padding:6px 12px;border-radius:999px;background:#dff0e6;color:#176646;font-size:12px;font-weight:900}
-    .transport-copy h2 span{display:inline-block}
-    .transport-copy h2{margin:13px 0 12px;font-size:clamp(33px,4vw,52px);line-height:1.2;letter-spacing:-.075em}
-    .transport-copy p{margin:0;color:var(--muted);font-size:17px;font-weight:750}
-    .transport-copy .subnote{margin-top:20px;color:#58706a;font-size:14px}
-    .bring{padding:30px;border:1px solid #e2dbcb;border-radius:15px;background:var(--paper);box-shadow:var(--shadow)}
-    .bring h3{margin:9px 0 18px;font-size:26px;letter-spacing:-.05em}
-    .bring ul{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0;padding:0;list-style:none}
-    .bring li{padding:18px 16px;border:1px solid var(--line);border-radius:11px;background:#f7fbf8;font-size:16px;font-weight:900;text-align:center}
-    .bring p{margin:16px 0 0;color:#5b736d;font-size:13px;font-weight:700}
+/* ---------- 流れ ---------- */
+.flow{background:var(--paper);border-block:1px solid var(--line)}
+.flow ol{list-style:none;counter-reset:s;margin:14px 0 0;padding:0;display:grid;gap:8px}
+.flow li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;background:var(--cream);border-radius:10px;padding:12px 14px}
+.flow li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center;margin-top:1px}
+.flow b{font-weight:700;font-size:16.5px}
+.flow em{display:block;font-style:normal;font-size:14px;color:var(--muted);margin-top:2px;line-height:1.65}
 
-    /* flyer download */
-    .flyer{background:var(--paper)}
-    .flyer-card{display:grid;grid-template-columns:1fr auto;gap:34px;align-items:center;
-      padding:36px 40px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(145deg,#ffffff,#f0f8f4);box-shadow:var(--shadow)}
-    .flyer-card h2{margin:9px 0 8px;font-size:clamp(26px,3vw,36px);line-height:1.3;letter-spacing:-.06em}
-    .flyer-card p{margin:0;color:var(--muted);font-size:15px;font-weight:700}
+/* ---------- 持ち物（チラシの絵をそのまま使う） ---------- */
+.bring{margin-top:22px;background:var(--cream);border-radius:var(--radius);padding:18px 16px}
+.bring h3{font-size:21px;font-weight:800}
+.bring-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.bring-item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 10px;text-align:center}
+.bring-item img{height:82px;width:auto;margin:0 auto 10px}
+.bring-item b{font-size:16px;font-weight:700}
 
-    /* contact */
-    .contact{background:var(--deep);color:#fff;text-align:center}
-    .contact h2{margin:8px 0 10px;font-size:clamp(33px,4vw,50px);line-height:1.18;letter-spacing:-.065em}
-    .contact-copy{margin:0 auto;max-width:640px;color:#d2e4dd;font-weight:700}
-    .tel-box{margin:34px auto 0;max-width:640px;padding:34px 30px;border-radius:16px;background:#0a4144;border:1px solid #4d7774}
-    .tel-label{margin:0;color:#a9cfc6;font-size:13px;font-weight:900;letter-spacing:.12em}
-    .tel-link{display:inline-flex;align-items:center;justify-content:center;gap:12px;margin:12px 0 0;
-      color:#fff;text-decoration:none;font-size:clamp(34px,5.4vw,54px);font-weight:900;letter-spacing:-.02em;line-height:1.1}
-    .tel-link::before{content:"";width:.72em;height:.72em;flex:none;background:currentColor;
-      -webkit-mask:var(--phone-icon) center/contain no-repeat;mask:var(--phone-icon) center/contain no-repeat}
-    .tel-cta{display:inline-flex;min-height:56px;align-items:center;justify-content:center;margin-top:20px;padding:14px 30px;
-      border-radius:999px;background:var(--orange);color:#fff;text-decoration:none;font-size:17px;font-weight:900}
-    .tel-hours{margin:18px 0 0;color:#cbe1da;font-size:14px;font-weight:700}
-    .tel-pending{margin:14px 0 0;font-size:20px;font-weight:900;color:#ffd9b8}
-    #contact-selection{margin:26px auto 0;max-width:640px;color:#e6f2ee;font-size:15px;font-weight:800}
+/* ---------- 送迎・お問い合わせ ---------- */
+.ride-area{text-align:center}
+.km{display:inline-block;background:var(--deep);color:#fff;border-radius:12px;padding:14px 22px;margin-top:6px}
+.km b{display:block;font-size:29px;font-weight:800;line-height:1.25}
+.km span{font-size:13px;opacity:.85}
+.contact{background:var(--deep);color:#fff}
+.contact .kicker{color:#8fd3b5}
+.contact h2{font-size:25px;font-weight:800}
+.contact>.wrap>p{color:rgba(255,255,255,.85);font-size:15px;margin-top:10px}
+.telbox{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:20px 16px;margin-top:16px;text-align:center}
+.tel-pending{font-size:19px;font-weight:700}
+.telbox .sub{font-size:13.5px;margin-top:8px;color:rgba(255,255,255,.75)}
+.tel-link{display:block;font-size:31px;font-weight:800;color:#fff;text-decoration:none}
+.tel-cta{display:block;margin-top:12px;background:var(--orange);color:#fff;text-decoration:none;font-weight:700;padding:14px;border-radius:10px}
+.dl{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:14px;color:#fff;text-decoration:none;font-weight:700;font-size:15px}
+footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:22px 0 30px;text-align:center;line-height:1.9}
 
-    footer{padding:22px 0;background:#002d30;color:#b9d2ca;font-size:12px}
-    footer .wrap{display:flex;justify-content:space-between;gap:20px}
-
-    @media(max-width:1000px){
-      .training-grid,.transport-grid{grid-template-columns:1fr;gap:30px}
-      .guide-grid{grid-template-columns:1fr}
-    }
-    @media(max-width:900px){
-      .availability-grid{grid-template-columns:1fr}
-      .flyer-card{grid-template-columns:1fr;gap:22px}
-    }
-    @media(max-width:640px){
-      .wrap{width:min(100% - 28px,1180px)}
-      .topnav a:not(.tel-mini){display:none}
-      .section-title{font-size:27px}
-      .section-title span,.guide-card h3 span,.transport-copy h2 span{display:inline}
-      .training .section-title{font-size:27px}
-      .topnav a.tel-mini{padding:9px 13px;font-size:12px}
-      .brand{font-size:14px;line-height:1.32}
-      .brand small{font-size:9px;letter-spacing:.04em}
-      .topbar .wrap{min-height:62px;gap:10px}
-      .hero{min-height:100svh;align-items:flex-start}
-      .hero::before{background:linear-gradient(180deg,rgba(255,254,250,.95) 0%,rgba(255,254,250,.88) 42%,rgba(255,254,250,.22) 70%,rgba(255,254,250,0) 88%)}
-      .hero-copy{padding:44px 0 40px}
-      .hero-note{display:none}  /* 同じ内容は「ご利用の流れ」に記載。スマホでは写真を見せる */
-      .actions .button{flex:1 1 100%}
-      section{padding:64px 0}
-      .availability-head{display:block}
-      .updated{display:inline-block;margin-top:17px}
-      .availability-slot-head{padding:15px}
-      .availability-slot-head b{font-size:20px}
-      .day-pills{grid-template-columns:repeat(3,1fr);gap:6px;padding:10px}
-      .day-pill{min-height:62px}
-      .care-grid{grid-template-columns:1fr;gap:10px}
-      .gear{grid-template-columns:1fr}
-      .guide-card{padding:25px}
-      .bring{padding:24px}
-      .bring ul{grid-template-columns:1fr}
-      .flyer-card{padding:26px 22px}
-      .flyer-card .button{width:100%}
-      .tel-box{padding:26px 18px}
-      footer .wrap{display:block}
-      footer span{display:block;margin:5px 0}
-    }
-  </style>
+/* ---------- 画面が広いとき ---------- */
+@media (min-width:700px){
+  body{font-size:17px}
+  section{padding:64px 0}
+  .h2,.strength h2,.contact h2{font-size:31px}
+  .hero{min-height:66svh}
+  .hero-inner{padding:40px 0 44px}
+  .hero-cta{max-width:340px}
+  .pills{grid-template-columns:repeat(6,1fr)}
+  .checks{grid-template-columns:1fr 1fr}
+  .steps3{grid-template-columns:repeat(3,1fr)}
+  .flow ol{grid-template-columns:1fr 1fr}
+  .bring-item img{height:96px}
+}
+</style>
 </head>
 <body>
-  <header class="topbar">
+
+<!-- ===================== ヒーロー ===================== -->
+<section class="hero">
+  <img src="assets/hero.jpg" width="1000" height="1333" alt="理学療法士の見守りのもと、運動に取り組む利用者">
+  <div class="hero-inner">
     <div class="wrap">
-      <div class="brand">リハプラス さかもと（仮）<small>短時間デイケア　｜　医療法人社団聖心会　阪本病院／介護医療院</small></div>
-      <nav class="topnav">
-        <a href="#availability">空き状況</a>
-        <a href="#strength">当施設の強み</a>
-        <a href="#guide">ご利用の流れ</a>
-        <a href="#transport">送迎・持ち物</a>
-        <a class="tel-mini" href="#contact">お電話でのお問い合わせ</a>
-      </nav>
+      <span class="open">2026.11.01 開設</span>
+      <h1>まだ、<br>伸びしろがある。</h1>
+      <p class="sub">それを、一緒に確かめにいく。</p>
+      <p class="name">リハプラス さかもと<small>短時間デイケア</small></p>
+      <a class="hero-cta" href="#availability">空き状況を見る</a>
     </div>
-  </header>
+  </div>
+</section>
 
-  <main>
-    <section class="hero">
-      <img src="assets/hero.jpg" alt="理学療法士の見守りのもと歩行練習に取り組む利用者">
-      <div class="wrap hero-copy">
-        <div class="open">2026.11.01 OPEN</div>
-        <h1><span>まだ、</span><span>伸びしろがある。</span></h1>
-        <p class="hero-lead">それを、一緒に確かめにいく。<b>短時間デイケア　リハプラス さかもと（仮）</b></p>
-        <div class="actions">
-          <a class="button" href="#availability">空き状況を見る</a>
-          <a class="button light" href="#contact">お電話でのお問い合わせ</a>
-        </div>
-        <p class="hero-note">1コマ90分　｜　リハビリテーションに特化した短時間デイケア</p>
-      </div>
-    </section>
+<!-- ===================== 営業日 ===================== -->
+<!-- ★曜日を並べて、読まなくても分かるようにしています -->
+<section class="opendays">
+  <div class="wrap">
+    <div class="kicker">OPEN</div>
+    <h2 class="h2">月曜から土曜まで、<br>あいています。</h2>
+    <div class="days-row">
+      <div class="day"><b>月</b><span>営業</span></div>
+      <div class="day"><b>火</b><span>営業</span></div>
+      <div class="day"><b>水</b><span>営業</span></div>
+      <div class="day"><b>木</b><span>営業</span></div>
+      <div class="day"><b>金</b><span>営業</span></div>
+      <div class="day"><b>土</b><span>営業</span></div>
+      <div class="sep"></div>
+      <div class="day off"><b>日</b><span>休み</span></div>
+    </div>
+    <p class="note" style="margin-top:12px">日曜・祝日はお休みです。</p>
+  </div>
+</section>
 
-    <section class="availability" id="availability">
-      <div class="wrap">
-        <div class="availability-head">
-          <div>
-            <div class="kicker">AVAILABILITY</div>
-            <h2 class="section-title">ご利用いただける時間帯</h2>
-            <p class="section-copy">1クール定員8名。空いている曜日をタップすると、お問い合わせ先の電話番号へご案内します。</p>
-          </div>
-          <div class="updated"><b>空き状況</b><span data-last-updated>読み込み中</span></div>
-        </div>
-        <div class="availability-grid" id="days" aria-label="時間帯ごとの空き状況"></div>
-        <div class="selection-note">
-          <strong id="selection">ご希望の曜日をタップしてください。</strong>
-          <span>選択した曜日と時間帯は、お電話の際にそのままお伝えいただけます。</span>
-        </div>
-      </div>
-    </section>
+<!-- ===================== 空き状況 ===================== -->
+<section id="availability">
+  <div class="wrap">
+    <div class="kicker">AVAILABILITY</div>
+    <h2 class="h2">空いている曜日</h2>
+    <p class="lead">1クール 定員8名。空いている曜日を押すと、お問い合わせ欄にご希望が入ります。</p>
+    <div id="slots"></div>
+    <p class="updated" data-last-updated></p>
+    <p class="picked" id="picked"></p>
+  </div>
+</section>
 
-    <section class="care" id="strength">
-      <div class="wrap">
-        <div class="kicker">OUR STRENGTH</div>
-        <h2 class="section-title"><span>理学療法士が、一人ひとりに</span><span>合わせて評価します。</span></h2>
-        <p class="section-copy">その方の問題点がどこにあるのかを理学療法士がきちんと評価して見極め、そこに対して治療を行う。これが当施設のいちばんの強みです。</p>
-        <div class="care-grid">
-          <article class="care-card">
-            <div class="number">01　評価する</div>
-            <h3>まず、からだを診ます。</h3>
-            <p>歩き方、関節の動き、筋力、痛み。理学療法士がその方のからだを評価します。</p>
-          </article>
-          <article class="care-card">
-            <div class="number">02　問題点を見つける</div>
-            <h3>つまずきの原因を、絞り込む。</h3>
-            <p>評価から「なぜ動きにくいのか」を導き出し、その方の問題点を明らかにします。</p>
-          </article>
-          <article class="care-card">
-            <div class="number">03　治療する</div>
-            <h3>その問題点に、治療する。</h3>
-            <p>医師の指示のもと、見つけた問題点に合わせた個別リハビリテーションを行います。</p>
-          </article>
-        </div>
-        <p class="care-foot">食事・入浴・レクリエーションはありません。リハビリテーションに集中していただく短時間デイケアです。</p>
-      </div>
-    </section>
+<!-- ===================== こんな方に ===================== -->
+<section class="who">
+  <div class="wrap">
+    <div class="kicker">WHO CAN USE</div>
+    <h2 class="h2">「移動が自分でできる方」の<br>リハビリ特化型です。</h2>
+    <ul class="checks">
+      <li>移動が自立している方</li>
+      <li>排泄が自立している方</li>
+      <li>歩行器の方・屋内で歩ける方も</li>
+    </ul>
+    <p class="note" style="margin-top:14px">介護度が高くても、移動が自立していればご相談ください。移動に介助が必要な方・車いすでの送迎が必要な方は、これまでどおり通常の通所リハビリテーションをご案内します。</p>
+  </div>
+</section>
 
-    <section class="training">
-      <div class="wrap training-grid">
-        <figure class="training-photo"><img src="assets/self-training.png" alt="上半身のトレーニング機器を使う利用者と見守るスタッフ"></figure>
-        <div>
-          <div class="kicker">SELF TRAINING</div>
-          <h2 class="section-title"><span>個別リハビリ以外の時間は、</span><span>自主トレーニング。</span></h2>
-          <p class="section-copy">理学療法士が順番に個別リハビリを行っている間も、手持ちぶさたにはなりません。ご自身のペースで、機器を使ったトレーニングに取り組んでいただきます。</p>
-          <ul class="gear">
-            <li>上半身のトレーニング機器<span>座ったまま腕・背中・胸を鍛えられます</span></li>
-            <li>自転車エルゴメーター<span>脚の運動と全身の持久力づくりに</span></li>
-            <li>ダンベル<span>重さを選んで、無理のない範囲で</span></li>
-          </ul>
-          <p class="rest-note">疲れたときは、座って休憩していただけるスペースもあります。</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="guide" id="guide">
-      <div class="wrap guide-grid">
-        <article class="guide-card">
-          <div class="kicker">WHO CAN USE</div>
-          <h3><span>「移動能力」で分けた、</span><span>リハビリ特化の短時間デイケアです。</span></h3>
-          <ul class="checks">
-            <li>移動が自立している方</li>
-            <li>排泄が自立している方</li>
-            <li>歩行器の方・屋内で歩けるレベルの方も含みます</li>
-          </ul>
-          <p class="guide-note">介護度が高くても、移動が自立している方はご相談ください。移動に介助が必要な方、車いすでの送迎が必要な方は、これまでどおり通常の通所リハビリテーションをご案内します。</p>
-        </article>
-        <article class="guide-card">
-          <div class="kicker">YOUR VISIT</div>
-          <h3>ご利用の流れ</h3>
-          <div class="flow">
-            <div class="flow-step"><b>1</b><div><strong>お迎え</strong><span>送迎をご利用の方は、順次お迎えにうかがいます。</span></div></div>
-            <div class="flow-step"><b>2</b><div><strong>到着・健康チェック</strong><span>血圧と体温を測り、顔色や体調の変化を確認します。</span></div></div>
-            <div class="flow-step"><b>3</b><div><strong>個別リハビリ</strong><span>理学療法士が一人ひとりに合ったリハビリを行います。</span></div></div>
-            <div class="flow-step"><b>4</b><div><strong>自主トレーニング</strong><span>機器を使い、ご自身のペースでトレーニングします。</span></div></div>
-            <div class="flow-step"><b>5</b><div><strong>お帰り</strong><span>送迎をご利用の方はご自宅までお送りします。</span></div></div>
-          </div>
-          <p class="guide-note">1コマ90分。営業日は月・火・水・木・金・土、日曜・祝日は定休日です。</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="transport" id="transport">
-      <div class="wrap transport-grid">
-        <div class="transport-copy">
-          <span class="pill">送迎範囲</span>
-          <h2><span>阪本病院から</span><span>おおむね<span style="white-space:nowrap">半径4km</span>。</span></h2>
-          <p>阪本病院を中心に、おおむね半径4kmの範囲で送迎を行います。圏外にお住まいの方も、まずはご相談ください。</p>
-          <p class="subnote">※ 送迎のルートや道路状況により、対応できない場合があります。<br>※ 送迎は②クール（10:40〜12:10）から開始します。</p>
-        </div>
-        <aside class="bring">
-          <span class="pill">ご持参いただくもの</span>
-          <h3>この2つだけ、お持ちください。</h3>
-          <ul>
-            <li>お飲み物</li>
-            <li>汗を拭くタオル</li>
-          </ul>
-          <p>水分の提供は行っておりません。お飲み物は各自でお持ちください。動きやすい服装・靴でお越しください。</p>
-        </aside>
-      </div>
-    </section>
-
-    <section class="flyer">
-      <div class="wrap">
-        <div class="flyer-card">
-          <div>
-            <div class="kicker">DOWNLOAD</div>
-            <h2>チラシ（PDF）をダウンロードできます。</h2>
-            <p>ケアマネジャー様・ご家族様への説明に、A4・2ページのチラシをそのままお使いいただけます。</p>
-          </div>
-          <a class="button" href="assets/rehaplus-sakamoto-flyer.pdf" download="リハプラスさかもと_チラシ.pdf">チラシをダウンロード（PDF）</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="contact" id="contact">
-      <div class="wrap">
-        <div class="kicker" style="color:#f3a47a">CONTACT</div>
-        <h2>お問い合わせ窓口</h2>
-        <p class="contact-copy">ご不明な点、ご利用のご相談は、お電話にてお問い合わせください。</p>
-        <div class="tel-box">
-          <p class="tel-label">お電話でのお問い合わせ</p>
-          <div id="tel-area"></div>
-          <p class="tel-hours">日曜・祝日は定休日です。</p>
-        </div>
-        <p id="contact-selection"></p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
+<!-- ===================== 強み（写真の上に文字） ===================== -->
+<section class="strength">
+  <img src="assets/self-training.jpg" width="900" height="600" loading="lazy" alt="機器を使ったトレーニングに取り組む利用者と、見守るスタッフ">
+  <div class="strength-inner">
     <div class="wrap">
-      <span>医療法人社団聖心会　阪本病院／介護医療院</span>
-      <span>リハプラス さかもと（仮）　｜　正式名称は届出までに決定予定</span>
+      <div class="kicker">OUR STRENGTH</div>
+      <h2>理学療法士が、<br>一人ひとりを評価します。</h2>
+      <p class="lead">どこに問題があるのかを見極めて、そこに対して治療する。ここがいちばんの強みです。</p>
+      <ul class="steps3">
+        <li><b>診る</b><span>歩き方、関節の動き、筋力、痛み。</span></li>
+        <li><b>原因を絞る</b><span>なぜ動きにくいのかを明らかにします。</span></li>
+        <li><b>治療する</b><span>医師の指示のもと、個別にリハビリ。</span></li>
+      </ul>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <script>
-    /* ★お問い合わせ先の電話番号：決まったら下の TEL に入れてください（例：'06-1234-5678'）。
-       空のままだと「準備中」と表示され、番号を入れると自動でタップ発信のボタンになります。 */
-    const TEL='';
+<!-- ===================== 動作解析 ===================== -->
+<section class="motion">
+  <div class="wrap">
+    <div class="kicker">MOTION ANALYSIS</div>
+    <h2 class="h2">歩く様子を、数字にします。</h2>
+    <figure>
+      <img src="assets/motion-analysis.jpg" width="900" height="675" loading="lazy" alt="カメラで歩行を撮影し、関節の動きを重ねて表示した動作解析のイメージ">
+    </figure>
+    <p class="lead">カメラの前を歩いていただくだけ。歩く速さ・歩幅・左右の差・膝の伸びを数値でお出しします（スタンフォード大学の仕組み）。</p>
+    <div class="tags">
+      <span class="tag">初回 約5分</span>
+      <span class="tag">以降 約2分</span>
+      <span class="tag">結果はケアマネジャーにもお渡しします</span>
+    </div>
+    <p class="nope"><b>食事・入浴・レクリエーションはありません。</b>リハビリテーションに集中していただく短時間のデイケアです。</p>
+  </div>
+</section>
 
-    /* 曜日は assets/availability.json の "days" があればそちらを優先します
-       （スプレッドシート側で曜日を増減しても、このファイルを直さずに反映されます）。 */
-    const DEFAULT_DAYS=['月','火','水','木','金','土'];
-    const slots=[['①','9:00〜10:30','送迎なし'],['②','10:40〜12:10','送迎あり'],['③','13:30〜15:00','送迎なし'],['④','15:10〜16:40','送迎なし']];
-    const root=document.getElementById('days');
-    const contactSelection=document.getElementById('contact-selection');
-    const fallback={capacityPerCourse:8,days:DEFAULT_DAYS,availability:Object.fromEntries(DEFAULT_DAYS.map(day=>[day,Object.fromEntries(slots.map(([num])=>[num,8]))]))};
+<!-- ===================== ご利用の流れ＋持ち物 ===================== -->
+<section class="flow">
+  <div class="wrap">
+    <div class="kicker">YOUR VISIT</div>
+    <h2 class="h2">ご利用の流れ</h2>
+    <ol>
+      <li><div><b>お迎え</b><em>送迎をご利用の方は、順次おうかがいします。</em></div></li>
+      <li><div><b>健康チェック</b><em>血圧と体温を測り、顔色や体調を確認します。</em></div></li>
+      <li><div><b>個別リハビリ</b><em>理学療法士が一人ひとりに合わせて行います。</em></div></li>
+      <li><div><b>自主トレーニング</b><em>自転車エルゴメーター・上半身の機器・セラバンドなど。</em></div></li>
+      <li><div><b>お帰り</b><em>送迎をご利用の方はご自宅までお送りします。</em></div></li>
+    </ol>
 
-    document.documentElement.style.setProperty('--phone-icon',`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.6a1 1 0 0 1-.25 1z'/%3E%3C/svg%3E")`);
+    <!-- ★持ち物はチラシの絵をそのまま切り出して使っています（assets/icon-*.png） -->
+    <div class="bring">
+      <div class="kicker">ご持参いただくもの</div>
+      <h3>この2つだけ。</h3>
+      <div class="bring-grid">
+        <div class="bring-item">
+          <img src="assets/icon-drink.png" width="94" height="220" loading="lazy" alt="">
+          <b>お飲み物</b>
+        </div>
+        <div class="bring-item">
+          <img src="assets/icon-towel.png" width="169" height="220" loading="lazy" alt="">
+          <b>汗を拭くタオル</b>
+        </div>
+      </div>
+      <p class="note" style="margin-top:12px">水分の提供は行っておりません。動きやすい服装・靴でお越しください。</p>
+    </div>
+  </div>
+</section>
 
-    function renderTel(){
-      const area=document.getElementById('tel-area');
-      if(!TEL){area.innerHTML='<p class="tel-pending">電話番号は準備中です</p>';return}
-      const href='tel:'+TEL.replace(/[^0-9+]/g,'');
-      area.innerHTML=`<a class="tel-link" href="${href}">${TEL}</a><br><a class="tel-cta" href="${href}">タップして電話をかける</a>`;
-    }
+<!-- ===================== 送迎範囲 ===================== -->
+<section>
+  <div class="wrap ride-area">
+    <div class="kicker">TRANSPORT</div>
+    <h2 class="h2">送迎いたします。</h2>
+    <p class="km"><span>阪本病院から</span><b>おおむね半径4km</b></p>
+    <p class="note" style="margin-top:14px">圏外にお住まいの方も、まずはご相談ください。<br>※ 送迎のルートや道路状況により、対応できない場合があります。</p>
+  </div>
+</section>
 
-    function stamp(iso){if(!iso)return'公開中';const date=new Date(iso);return `最終更新：${date.toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}`}
+<!-- ===================== お問い合わせ ===================== -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="kicker">CONTACT</div>
+    <h2>お問い合わせ</h2>
+    <p>ご不明な点、ご利用のご相談は、お電話でお問い合わせください。</p>
+    <div class="telbox" id="tel-area"></div>
+    <a class="dl" href="assets/rehaplus-sakamoto-flyer.pdf" download="リハプラスさかもと_チラシ.pdf">チラシ（PDF・A4 2ページ／約6MB）</a>
+  </div>
+</section>
 
-    function choose(day,num,time,button){
-      document.querySelectorAll('.day-pill').forEach(item=>item.classList.remove('selected'));
-      button.classList.add('selected');
-      document.getElementById('selection').textContent=`${day}曜日　${num}クール ${time} を選択しました。`;
-      contactSelection.textContent=`ご希望：${day}曜日　${num}クール ${time}　―　お電話の際にお伝えください。`;
-      document.getElementById('contact').scrollIntoView({behavior:'smooth',block:'start'});
-    }
+<footer>
+  短時間デイケア　リハプラス さかもと<br>
+  2026年11月1日 開設
+</footer>
 
-    function renderAvailability(data){
-      const capacity=data.capacityPerCourse||8;
-      const days=Array.isArray(data.days)&&data.days.length?data.days:DEFAULT_DAYS;
-      root.replaceChildren();
-      slots.forEach(([num,time])=>{
-        const card=document.createElement('article');
-        card.className=`availability-slot ${num==='②'?'send':''}`;
-        card.innerHTML=`<div class="availability-slot-head"><div><span>${num}クール</span><b>${time}</b></div>${num==='②'?'<span class="send-badge">送迎あり</span>':''}</div>`;
-        const pills=document.createElement('div');
-        pills.className='day-pills';
-        days.forEach(day=>{
-          const remaining=data.availability?.[day]?.[num]??capacity;
-          const open=remaining>0;
-          const button=document.createElement('button');
-          button.type='button';
-          button.className=`day-pill ${open?'':'adjusting'}`;
-          button.setAttribute('aria-label',`${day}曜日 ${num}クール ${time} ${open?'空きあり。お問い合わせへ進む':'受付調整中'}`);
-          button.innerHTML=`<b>${day}</b><span>${open?`空きあり<br>${remaining}/${capacity}`:'受付調整中'}</span>`;
-          if(open)button.addEventListener('click',()=>choose(day,num,time,button));
-          pills.appendChild(button);
-        });
-        card.appendChild(pills);
-        root.appendChild(card);
-      });
-      document.querySelectorAll('[data-last-updated]').forEach(el=>el.textContent=stamp(data.updatedAt));
-    }
+<script>
+/* ★お問い合わせ先の電話番号：決まったら下の TEL に入れてください（例：'0120-000-000'）。
+   空のままだと「準備中です」と表示され、番号を入れると自動でタップ発信のボタンになります。 */
+const TEL='';
 
-    async function refreshAvailability(){
-      try{const response=await fetch(`assets/availability.json?${Date.now()}`,{cache:'no-store'});renderAvailability(response.ok?await response.json():fallback)}
-      catch{renderAvailability(fallback)}
-    }
+/* ★クールの時間。status を 'open' にするとその枠の空き状況が表示され、
+   'planned' にすると下の「検討中」の1行にまとめられます。 */
+const COURSES=[
+  {no:'①', time:'9:00〜10:30',  ride:false, status:'open'},
+  {no:'②', time:'10:40〜12:10', ride:true,  status:'open'},
+  {no:'③', time:'13:30〜15:00', ride:false, status:'planned'},
+  {no:'④', time:'15:10〜16:40', ride:false, status:'planned'}
+];
 
-    renderTel();
-    refreshAvailability();
-    setInterval(refreshAvailability,60000);
-  </script>
+const DEFAULT_DAYS=['月','火','水','木','金','土'];
+const slotsEl=document.getElementById('slots');
+const pickedEl=document.getElementById('picked');
+const BUS='<svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 16V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a2 2 0 0 1-1 1.73V19a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H8v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-1.27A2 2 0 0 1 4 16m2-9v4h12V7zm1.5 8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/></svg>';
+
+function renderTel(){
+  const area=document.getElementById('tel-area');
+  if(!TEL){
+    area.innerHTML='<p class="tel-pending">電話番号は準備中です</p><p class="sub">決まりしだい、このページに掲載します。</p>';
+    return;
+  }
+  const href='tel:'+TEL.replace(/[^0-9+]/g,'');
+  area.innerHTML=`<a class="tel-link" href="${href}">${TEL}</a><a class="tel-cta" href="${href}">タップして電話をかける</a>`;
+}
+
+function stamp(iso){
+  if(!iso)return'';
+  const d=new Date(iso);
+  return `空き状況の最終更新：${d.toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}`;
+}
+
+function choose(day,course,button){
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
+  button.classList.add('selected');
+  pickedEl.textContent=`ご希望：${day}曜日　${course.no}クール ${course.time}　― お電話の際にお伝えください。`;
+  document.getElementById('contact').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function render(data){
+  const capacity=data.capacityPerCourse||8;
+  const days=(Array.isArray(data.days)&&data.days.length)?data.days:DEFAULT_DAYS;
+  slotsEl.replaceChildren();
+
+  COURSES.filter(c=>c.status==='open').forEach(course=>{
+    const card=document.createElement('article');
+    card.className='slot';
+    card.innerHTML=
+      `<div class="slot-head"><span class="slot-no">${course.no}クール</span><span class="slot-time">${course.time}</span></div>`+
+      (course.ride
+        ? `<div class="ride yes">${BUS}<span>送迎あり</span></div>`
+        : `<div class="ride no">${BUS}<span>送迎なし（直接お越しください）</span></div>`);
+
+    const pills=document.createElement('div');
+    pills.className='pills';
+    days.forEach(day=>{
+      const left=data.availability?.[day]?.[course.no] ?? capacity;
+      const open=left>0;
+      const b=document.createElement('button');
+      b.type='button';
+      b.className='pill'+(open?'':' full');
+      b.setAttribute('aria-label',`${day}曜日 ${course.no}クール ${course.time} ${open?'空きあり。お問い合わせへ進む':'受付調整中'}`);
+      b.innerHTML=`<b>${day}</b><span>${open?`空きあり<br>${left}/${capacity}`:'受付<br>調整中'}</span>`;
+      if(open)b.addEventListener('click',()=>choose(day,course,b));
+      pills.appendChild(b);
+    });
+    card.appendChild(pills);
+    slotsEl.appendChild(card);
+  });
+
+  const later=COURSES.filter(c=>c.status==='planned');
+  if(later.length){
+    const p=document.createElement('p');
+    p.className='later';
+    p.textContent='午後（'+later.map(c=>c.no+'クール '+c.time).join('／')+'）は検討中です。';
+    slotsEl.appendChild(p);
+  }
+
+  document.querySelectorAll('[data-last-updated]').forEach(el=>el.textContent=stamp(data.updatedAt));
+}
+
+const fallback={capacityPerCourse:8,days:DEFAULT_DAYS,availability:{}};
+
+async function refresh(){
+  try{
+    const res=await fetch(`assets/availability.json?${Date.now()}`,{cache:'no-store'});
+    render(res.ok?await res.json():fallback);
+  }catch{ render(fallback) }
+}
+
+renderTel();
+refresh();
+setInterval(refresh,60000);
+</script>
 </body>
 </html>
