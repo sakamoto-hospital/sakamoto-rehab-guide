@@ -9,13 +9,15 @@
 <style>
 /* ===========================================================
    リハプラス さかもと｜ケアマネジャー向けページ
-   ★スマホで見る方がほとんどです。まずスマホの見た目で作り、
-     広い画面はあとから広げています（min-width のメディアクエリ）。
    ★直すときによく触るところ
      - 電話番号 ……… 一番下の <script> の TEL
      - クールの時間 … 同じく <script> の COURSES
      - 空き枠の数字 … assets/availability.json
                       （スプレッドシートから自動更新できます。tools/availability-sync.md）
+   ★ヒーローの写真について（2026-09-22 に一度失敗しているので残す）
+     - object-position は center 24%。ここを動かすと人物が画面から外れる
+     - グラデーションは「横方向」。左を伏せて文字を読ませ、右は写真をそのまま見せる
+     - 縦方向のグラデーションにすると写真全体が覆われて台無しになる
    =========================================================== */
 :root{
   --ink:#083f42;      /* 本文の濃い色 */
@@ -30,7 +32,7 @@
   --radius:14px;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{
   margin:0;
   /* ★ケアマネさんには年配の方もいます。本文は小さくしすぎない */
@@ -43,31 +45,48 @@ h1,h2,h3{margin:0;line-height:1.35;letter-spacing:-.01em}
 p{margin:0}
 a{color:inherit}
 
-.wrap{width:min(100% - 32px, 760px);margin-inline:auto}
-section{padding:38px 0}
+.wrap{width:min(100% - 32px, 1120px);margin-inline:auto}
+.prose{max-width:720px}
+section{padding:44px 0;scroll-margin-top:110px}
 .kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--green);margin-bottom:8px}
 .h2{font-size:25px;font-weight:800;margin-bottom:12px}
 .lead{color:var(--muted);font-size:15.5px;margin-top:10px}
 .note{font-size:13.5px;color:var(--muted);line-height:1.7}
 
-/* ---------- ヒーロー ---------- */
-.hero{position:relative;padding:0;min-height:68svh;display:flex;align-items:flex-end;overflow:hidden}
-.hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 18%}
-/* 写真は上半分で見せて、文字がのる下半分は白でしっかり伏せる（チラシと同じ考え方） */
-.hero::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(255,255,255,.55) 0%,rgba(255,255,255,.12) 26%,rgba(255,255,255,.12) 40%,rgba(250,249,243,.97) 68%,#faf9f3 100%)}
-.hero-inner{position:relative;z-index:1;padding:26px 0 30px;width:100%}
-.open{display:inline-block;background:var(--orange);color:#fff;font-weight:800;font-size:13px;letter-spacing:.06em;padding:5px 12px;border-radius:999px}
-.hero h1{font-size:clamp(34px,9.5vw,52px);font-weight:800;margin-top:14px;color:var(--deep)}
-.hero .sub{margin-top:8px;font-size:17px;font-weight:600}
-.hero .name{margin-top:16px;display:inline-block;background:rgba(255,255,255,.9);border-radius:10px;padding:8px 13px;font-weight:700;font-size:15.5px;color:var(--deep)}
-.hero .name small{display:block;font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.06em}
-.hero-cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;
-  background:var(--deep);color:#fff;text-decoration:none;font-weight:700;font-size:17px;padding:16px;border-radius:12px;box-shadow:var(--shadow)}
+/* ---------- 上部のヘッダー（左上に屋号・メニュー） ---------- */
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,254,250,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.topbar .wrap{display:flex;flex-direction:column;gap:6px;padding:9px 0}
+.bar1{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{font-size:18px;font-weight:800;line-height:1.25;white-space:nowrap}
+.brand small{display:block;font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.1em}
+.tel-mini{flex:none;background:var(--orange);color:#fff;text-decoration:none;font-weight:700;font-size:12.5px;padding:8px 13px;border-radius:999px;white-space:nowrap}
+/* ★スマホでもメニューを消さない。入りきらない分は横にスクロールさせる */
+.topnav{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{flex:none;text-decoration:none;font-size:13px;font-weight:700;color:var(--deep);
+  background:#eef3f1;border:1px solid var(--line);border-radius:999px;padding:6px 13px;white-space:nowrap}
 
-/* ---------- 営業日（曜日の丸で見せる） ---------- */
+/* ---------- ヒーロー ---------- */
+.hero{position:relative;padding:0;min-height:calc(100svh - 96px);display:flex;align-items:center;overflow:hidden;isolation:isolate}
+.hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 24%;z-index:0}
+/* ★横方向。左は伏せて文字を読ませ、右は人物をそのまま見せる */
+.hero::before{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(90deg,rgba(250,249,243,.96) 0%,rgba(250,249,243,.88) 38%,rgba(250,249,243,.3) 70%,rgba(250,249,243,0) 92%)}
+.hero-copy{position:relative;z-index:2;width:min(100%,620px);padding:34px 0}
+.open{display:inline-flex;align-items:center;gap:8px;color:var(--orange);font-size:13px;font-weight:800;letter-spacing:.08em}
+.open::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--orange)}
+.hero h1{font-size:clamp(38px,10vw,72px);font-weight:800;margin:14px 0 10px;color:var(--deep);line-height:1.14;letter-spacing:-.04em;
+  text-shadow:0 1px 6px rgba(250,249,243,.8)}
+.hero .sub{font-size:clamp(17px,2.2vw,25px);font-weight:700;text-shadow:0 1px 5px rgba(250,249,243,.9)}
+.hero .name{margin-top:8px;font-size:clamp(14px,1.6vw,18px);font-weight:700;color:#36726c;text-shadow:0 1px 5px rgba(250,249,243,.9)}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:13px 26px;border-radius:10px;
+  background:var(--deep);color:#fff;text-decoration:none;font-weight:700;font-size:16.5px;border:1px solid var(--deep);box-shadow:var(--shadow)}
+.btn.light{background:rgba(255,255,255,.92);color:var(--ink);border-color:var(--line)}
+
+/* ---------- 営業日（曜日を並べて見せる） ---------- */
 .opendays{background:var(--paper);border-block:1px solid var(--line);padding:30px 0}
-.days-row{display:flex;gap:6px;align-items:stretch;margin-top:6px}
+.days-row{display:flex;gap:6px;align-items:stretch;margin-top:6px;max-width:620px}
 .day{flex:1;text-align:center;border-radius:10px;padding:10px 0 8px;background:var(--deep);color:#fff}
 .day b{display:block;font-size:17px;font-weight:700;line-height:1.2}
 .day span{display:block;font-size:11px;opacity:.85;margin-top:2px}
@@ -75,7 +94,8 @@ section{padding:38px 0}
 .sep{width:1px;background:var(--line);margin:4px 2px}
 
 /* ---------- 空き状況 ---------- */
-.slot{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 14px;margin-top:14px;box-shadow:var(--shadow)}
+.slots{display:grid;gap:14px;margin-top:14px}
+.slot{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 14px;box-shadow:var(--shadow)}
 .slot-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
 .slot-no{font-size:14px;font-weight:700;color:var(--green)}
 .slot-time{font-size:23px;font-weight:800;letter-spacing:-.02em}
@@ -106,9 +126,9 @@ section{padding:38px 0}
 /* ---------- 強み（写真の上に文字） ---------- */
 .strength{position:relative;padding:0;overflow:hidden}
 .strength>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%}
-/* ★写真が見えなくならない濃さにする（濃くしすぎると「背景写真」の意味がなくなる） */
+/* ★写真が見えなくならない濃さにする */
 .strength::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,42,42,.52),rgba(0,42,42,.8))}
-.strength-inner{position:relative;z-index:1;color:#fff;padding:40px 0}
+.strength-inner{position:relative;z-index:1;color:#fff;padding:44px 0}
 .strength-inner .kicker{color:#8fd3b5}
 .strength h2{font-size:26px;font-weight:800}
 .strength .lead{color:rgba(255,255,255,.88)}
@@ -116,14 +136,8 @@ section{padding:38px 0}
 .steps3 li{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:11px;padding:13px 15px}
 .steps3 b{display:block;font-size:17px;font-weight:700}
 .steps3 span{display:block;font-size:14px;color:rgba(255,255,255,.82);margin-top:3px;line-height:1.65}
-
-/* ---------- 動作解析 ---------- */
-.motion figure{margin:0 0 16px}
-.motion img{border-radius:var(--radius);box-shadow:var(--shadow)}
-.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
-.tag{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600}
-.nope{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 15px;font-size:14.5px;color:var(--muted)}
-.nope b{color:var(--ink)}
+.nope{margin-top:18px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:10px;padding:13px 15px;font-size:14.5px;color:rgba(255,255,255,.86)}
+.nope b{color:#fff}
 
 /* ---------- 流れ ---------- */
 .flow{background:var(--paper);border-block:1px solid var(--line)}
@@ -136,56 +150,105 @@ section{padding:38px 0}
 /* ---------- 持ち物（チラシの絵をそのまま使う） ---------- */
 .bring{margin-top:22px;background:var(--cream);border-radius:var(--radius);padding:18px 16px}
 .bring h3{font-size:21px;font-weight:800}
-.bring-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.bring-item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 10px;text-align:center}
-.bring-item img{height:82px;width:auto;margin:0 auto 10px}
+.bring-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;max-width:460px}
+.bring-item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 10px;text-align:center}
+.bring-item img{width:96px;height:96px;margin:0 auto 8px}
 .bring-item b{font-size:16px;font-weight:700}
 
-/* ---------- 送迎・お問い合わせ ---------- */
-.ride-area{text-align:center}
+/* ---------- 送迎 ---------- */
 .km{display:inline-block;background:var(--deep);color:#fff;border-radius:12px;padding:14px 22px;margin-top:6px}
 .km b{display:block;font-size:29px;font-weight:800;line-height:1.25}
 .km span{font-size:13px;opacity:.85}
+
+/* ---------- チラシ（表紙を見せる） ---------- */
+.flyer{background:var(--paper);border-block:1px solid var(--line)}
+.flyer-grid{display:grid;gap:18px;align-items:center;margin-top:14px}
+.flyer-cover{display:block;border-radius:10px;overflow:hidden;border:1px solid var(--line);box-shadow:0 10px 30px rgba(7,65,59,.16);max-width:300px}
+.flyer-cover img{width:100%;height:auto}
+.dl{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin-top:14px;
+  background:var(--deep);color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:15px 24px;border-radius:10px;box-shadow:var(--shadow)}
+
+/* ---------- お問い合わせ ---------- */
 .contact{background:var(--deep);color:#fff}
 .contact .kicker{color:#8fd3b5}
 .contact h2{font-size:25px;font-weight:800}
 .contact>.wrap>p{color:rgba(255,255,255,.85);font-size:15px;margin-top:10px}
-.telbox{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:20px 16px;margin-top:16px;text-align:center}
+.telbox{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:20px 16px;margin-top:16px;text-align:center;max-width:520px}
 .tel-pending{font-size:19px;font-weight:700}
 .telbox .sub{font-size:13.5px;margin-top:8px;color:rgba(255,255,255,.75)}
 .tel-link{display:block;font-size:31px;font-weight:800;color:#fff;text-decoration:none}
 .tel-cta{display:block;margin-top:12px;background:var(--orange);color:#fff;text-decoration:none;font-weight:700;padding:14px;border-radius:10px}
-.dl{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:14px;color:#fff;text-decoration:none;font-weight:700;font-size:15px}
 footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:22px 0 30px;text-align:center;line-height:1.9}
 
-/* ---------- 画面が広いとき ---------- */
-@media (min-width:700px){
+/* =========== タブレット以上 =========== */
+@media (min-width:768px){
   body{font-size:17px}
-  section{padding:64px 0}
-  .h2,.strength h2,.contact h2{font-size:31px}
-  .hero{min-height:66svh}
-  .hero-inner{padding:40px 0 44px}
-  .hero-cta{max-width:340px}
+  section{padding:60px 0}
+  .h2,.strength h2,.contact h2{font-size:30px}
   .pills{grid-template-columns:repeat(6,1fr)}
+  .slots{grid-template-columns:1fr 1fr}
   .checks{grid-template-columns:1fr 1fr}
   .steps3{grid-template-columns:repeat(3,1fr)}
   .flow ol{grid-template-columns:1fr 1fr}
-  .bring-item img{height:96px}
+  .flyer-grid{grid-template-columns:300px 1fr;gap:34px;align-items:start}
+  .bring-item img{width:110px;height:110px}
+}
+
+/* =========== パソコン =========== */
+@media (min-width:1024px){
+  section{padding:76px 0}
+  .h2,.strength h2,.contact h2{font-size:34px}
+  /* ヘッダーは1行に戻す（左に屋号・右にメニュー） */
+  /* 左に屋号／中ほどにメニュー／右端に問い合わせ、の1行に並べ直す */
+  .topbar .wrap{flex-direction:row;align-items:center;gap:26px;padding:0;min-height:72px}
+  .bar1{display:contents}
+  .brand{order:1;font-size:21px}
+  .topnav{order:2;margin-left:auto;gap:6px}
+  .tel-mini{order:3;font-size:13.5px;padding:10px 18px}
+  .topnav a{background:none;border:none;padding:8px 10px;font-size:13.5px}
+  .topnav a:hover{color:var(--orange)}
+  .hero{min-height:calc(100svh - 72px)}
+  .hero-copy{padding:60px 0}
+  .strength-inner{padding:76px 0}
+  /* 流れは1行に並べて「順番」が見えるようにする */
+  .flow ol{grid-template-columns:repeat(5,1fr);gap:10px}
+  .flow li{flex-direction:column;gap:8px;padding:16px 14px}
+  .flow li::before{margin-top:0}
 }
 </style>
 </head>
 <body>
 
+<!-- ===================== 上部のヘッダー ===================== -->
+<header class="topbar">
+  <div class="wrap">
+    <div class="bar1">
+      <div class="brand">リハプラス さかもと<small>短時間デイケア</small></div>
+      <a class="tel-mini" href="#contact">お問い合わせ</a>
+    </div>
+    <nav class="topnav">
+      <a href="#availability">空き状況</a>
+      <a href="#strength">当施設の強み</a>
+      <a href="#guide">ご利用の流れ</a>
+      <a href="#transport">送迎・持ち物</a>
+      <a href="#flyer">チラシ</a>
+    </nav>
+  </div>
+</header>
+
 <!-- ===================== ヒーロー ===================== -->
 <section class="hero">
   <img src="assets/hero.jpg" width="1000" height="1333" alt="理学療法士の見守りのもと、運動に取り組む利用者">
-  <div class="hero-inner">
-    <div class="wrap">
+  <div class="wrap">
+    <div class="hero-copy">
       <span class="open">2026.11.01 開設</span>
       <h1>まだ、<br>伸びしろがある。</h1>
       <p class="sub">それを、一緒に確かめにいく。</p>
-      <p class="name">リハプラス さかもと<small>短時間デイケア</small></p>
-      <a class="hero-cta" href="#availability">空き状況を見る</a>
+      <p class="name">短時間デイケア　リハプラス さかもと</p>
+      <div class="hero-actions">
+        <a class="btn" href="#availability">空き状況を見る</a>
+        <a class="btn light" href="#flyer">チラシを見る</a>
+      </div>
     </div>
   </div>
 </section>
@@ -215,8 +278,8 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kicker">AVAILABILITY</div>
     <h2 class="h2">空いている曜日</h2>
-    <p class="lead">1クール 定員8名。空いている曜日を押すと、お問い合わせ欄にご希望が入ります。</p>
-    <div id="slots"></div>
+    <p class="lead prose">1クール 定員8名。空いている曜日を押すと、お問い合わせ欄にご希望が入ります。</p>
+    <div class="slots" id="slots"></div>
     <p class="updated" data-last-updated></p>
     <p class="picked" id="picked"></p>
   </div>
@@ -232,47 +295,30 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <li>排泄が自立している方</li>
       <li>歩行器の方・屋内で歩ける方も</li>
     </ul>
-    <p class="note" style="margin-top:14px">介護度が高くても、移動が自立していればご相談ください。移動に介助が必要な方・車いすでの送迎が必要な方は、これまでどおり通常の通所リハビリテーションをご案内します。</p>
+    <p class="note prose" style="margin-top:14px">介護度が高くても、移動が自立していればご相談ください。移動に介助が必要な方・車いすでの送迎が必要な方は、これまでどおり通常の通所リハビリテーションをご案内します。</p>
   </div>
 </section>
 
 <!-- ===================== 強み（写真の上に文字） ===================== -->
-<section class="strength">
+<section class="strength" id="strength">
   <img src="assets/self-training.jpg" width="900" height="600" loading="lazy" alt="機器を使ったトレーニングに取り組む利用者と、見守るスタッフ">
   <div class="strength-inner">
     <div class="wrap">
       <div class="kicker">OUR STRENGTH</div>
       <h2>理学療法士が、<br>一人ひとりを評価します。</h2>
-      <p class="lead">どこに問題があるのかを見極めて、そこに対して治療する。ここがいちばんの強みです。</p>
+      <p class="lead prose">どこに問題があるのかを見極めて、そこに対して治療する。ここがいちばんの強みです。</p>
       <ul class="steps3">
         <li><b>診る</b><span>歩き方、関節の動き、筋力、痛み。</span></li>
         <li><b>原因を絞る</b><span>なぜ動きにくいのかを明らかにします。</span></li>
         <li><b>治療する</b><span>医師の指示のもと、個別にリハビリ。</span></li>
       </ul>
+      <p class="nope prose"><b>食事・入浴・レクリエーションはありません。</b>リハビリテーションに集中していただく短時間のデイケアです。</p>
     </div>
-  </div>
-</section>
-
-<!-- ===================== 動作解析 ===================== -->
-<section class="motion">
-  <div class="wrap">
-    <div class="kicker">MOTION ANALYSIS</div>
-    <h2 class="h2">歩く様子を、数字にします。</h2>
-    <figure>
-      <img src="assets/motion-analysis.jpg" width="900" height="675" loading="lazy" alt="カメラで歩行を撮影し、関節の動きを重ねて表示した動作解析のイメージ">
-    </figure>
-    <p class="lead">カメラの前を歩いていただくだけ。歩く速さ・歩幅・左右の差・膝の伸びを数値でお出しします（スタンフォード大学の仕組み）。</p>
-    <div class="tags">
-      <span class="tag">初回 約5分</span>
-      <span class="tag">以降 約2分</span>
-      <span class="tag">結果はケアマネジャーにもお渡しします</span>
-    </div>
-    <p class="nope"><b>食事・入浴・レクリエーションはありません。</b>リハビリテーションに集中していただく短時間のデイケアです。</p>
   </div>
 </section>
 
 <!-- ===================== ご利用の流れ＋持ち物 ===================== -->
-<section class="flow">
+<section class="flow" id="guide">
   <div class="wrap">
     <div class="kicker">YOUR VISIT</div>
     <h2 class="h2">ご利用の流れ</h2>
@@ -290,26 +336,44 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <h3>この2つだけ。</h3>
       <div class="bring-grid">
         <div class="bring-item">
-          <img src="assets/icon-drink.png" width="94" height="220" loading="lazy" alt="">
+          <img src="assets/icon-drink.png" width="240" height="240" loading="lazy" alt="">
           <b>お飲み物</b>
         </div>
         <div class="bring-item">
-          <img src="assets/icon-towel.png" width="169" height="220" loading="lazy" alt="">
+          <img src="assets/icon-towel.png" width="240" height="240" loading="lazy" alt="">
           <b>汗を拭くタオル</b>
         </div>
       </div>
-      <p class="note" style="margin-top:12px">水分の提供は行っておりません。動きやすい服装・靴でお越しください。</p>
+      <p class="note prose" style="margin-top:12px">水分の提供は行っておりません。動きやすい服装・靴でお越しください。</p>
     </div>
   </div>
 </section>
 
 <!-- ===================== 送迎範囲 ===================== -->
-<section>
-  <div class="wrap ride-area">
+<section id="transport">
+  <div class="wrap">
     <div class="kicker">TRANSPORT</div>
     <h2 class="h2">送迎いたします。</h2>
     <p class="km"><span>阪本病院から</span><b>おおむね半径4km</b></p>
-    <p class="note" style="margin-top:14px">圏外にお住まいの方も、まずはご相談ください。<br>※ 送迎のルートや道路状況により、対応できない場合があります。</p>
+    <p class="note prose" style="margin-top:14px">圏外にお住まいの方も、まずはご相談ください。<br>※ 送迎のルートや道路状況により、対応できない場合があります。</p>
+  </div>
+</section>
+
+<!-- ===================== チラシ ===================== -->
+<section class="flyer" id="flyer">
+  <div class="wrap">
+    <div class="kicker">DOWNLOAD</div>
+    <h2 class="h2">チラシをお使いください。</h2>
+    <div class="flyer-grid">
+      <a class="flyer-cover" href="assets/rehaplus-sakamoto-flyer.pdf" download="リハプラスさかもと_チラシ.pdf">
+        <img src="assets/flyer-cover.jpg" width="396" height="560" loading="lazy" alt="リハプラス さかもと チラシの表紙">
+      </a>
+      <div>
+        <p class="lead prose" style="margin-top:0">ご家族様への説明や、事業所内での回覧にそのままお使いいただけます。表紙を押すとダウンロードできます。</p>
+        <a class="dl" href="assets/rehaplus-sakamoto-flyer.pdf" download="リハプラスさかもと_チラシ.pdf">チラシをダウンロード</a>
+        <p class="note" style="margin-top:10px">PDF・A4 2ページ／約6MB</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -318,9 +382,8 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kicker">CONTACT</div>
     <h2>お問い合わせ</h2>
-    <p>ご不明な点、ご利用のご相談は、お電話でお問い合わせください。</p>
+    <p class="prose">ご不明な点、ご利用のご相談は、お電話でお問い合わせください。</p>
     <div class="telbox" id="tel-area"></div>
-    <a class="dl" href="assets/rehaplus-sakamoto-flyer.pdf" download="リハプラスさかもと_チラシ.pdf">チラシ（PDF・A4 2ページ／約6MB）</a>
   </div>
 </section>
 
