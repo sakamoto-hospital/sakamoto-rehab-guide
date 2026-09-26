@@ -273,6 +273,7 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
         <p class="v" id="r-value">—</p>
         <p class="s" id="r-sub"></p>
       </div>
+      <p class="caption">ほかの介護サービスと合わせて、介護度ごとのひと月の上限（区分支給限度基準額）を超えた分は、全額ご負担になります。ご利用の回数は、担当のケアマネジャーと相談して決まります。</p>
       <details class="breakdown">
         <summary>計算の内訳を見る</summary>
         <table class="bd" id="r-bd"></table>
@@ -431,7 +432,9 @@ function renderCalc(){
       Object.keys(units).forEach(l=>g.appendChild(new Option(l,l)));lv.appendChild(g);
     });
     FEES.courses.forEach((c,i)=>co.add(new Option(`${c.no}クール（${c.ride?'送迎あり':'送迎なし'}）`,i)));
-    for(let n=1;n<=13;n++)vi.add(new Option(n+'回'+(n===4?'（週1回の目安）':n===8?'（週2回の目安）':''),n));
+    // 月〜土の営業なので、多い月で27回（31日で日曜が4回の月）。回数そのものに国の上限はない
+    const hint={4:'（週1回の目安）',8:'（週2回の目安）',13:'（週3回の目安）'};
+    for(let n=1;n<=27;n++)vi.add(new Option(n+'回'+(hint[n]||''),n));
     lv.value=state.level;co.value=state.course;vi.value=state.visits;
     lv.addEventListener('change',()=>{state.level=lv.value;renderCalc()});
     co.addEventListener('change',()=>{state.course=+co.value;renderCalc()});
