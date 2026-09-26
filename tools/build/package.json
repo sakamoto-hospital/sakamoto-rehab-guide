@@ -1,0 +1,19 @@
+{
+  "name": "flyer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.9",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.6.82",
+    "qrcode": "^1.5.4"
+  }
+}

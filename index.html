@@ -14,6 +14,8 @@
      - クールの時間 … 同じく <script> の COURSES
      - 空き枠の数字 … assets/availability.json
                       （スプレッドシートから自動更新できます。tools/availability-sync.md）
+     - 料金 ……………… assets/fees.json（トップの「料金の目安」と fees.html の両方に出ます）
+     - チラシ ………… 新しいチラシPDFは tools/build/update-flyer.md の手順で差し替え
    ★ヒーローの写真について（2026-09-22 に一度失敗しているので残す）
      - object-position は center 24%。ここを動かすと人物が画面から外れる
      - グラデーションは「横方向」。左を伏せて文字を読ませ、右は写真をそのまま見せる
@@ -78,6 +80,16 @@ section{padding:44px 0;scroll-margin-top:110px}
 .hero h1{font-size:clamp(38px,10vw,72px);font-weight:800;margin:14px 0 10px;color:var(--deep);line-height:1.14;letter-spacing:-.04em;
   text-shadow:0 1px 6px rgba(250,249,243,.8)}
 .hero .sub{font-size:clamp(17px,2.2vw,25px);font-weight:700;text-shadow:0 1px 5px rgba(250,249,243,.9)}
+.hero .nb{display:inline-block}
+.hero h1,.hero .sub{font-feature-settings:"palt"}  /* かぎ括弧のまわりの空きを詰める */
+/* ★スマホは「あなたの／「したい」を／現実に。」の3行にして幅を狭くする。
+   1行に並べると右側の人物の顔に文字がかかる（2026-09-26 に390pxで確認） */
+@media (max-width:599px){
+  .hero h1{font-size:clamp(30px,8.4vw,40px)}
+  .hero h1 .nb{display:block}
+  .hero h1 br{display:none}
+}
+.hero em{font-style:normal;color:var(--orange)}
 .hero .name{margin-top:8px;font-size:clamp(14px,1.6vw,18px);font-weight:700;color:#36726c;text-shadow:0 1px 5px rgba(250,249,243,.9)}
 .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:13px 26px;border-radius:10px;
@@ -115,6 +127,16 @@ section{padding:44px 0;scroll-margin-top:110px}
 .later{margin-top:14px;border:1px dashed var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--muted);background:rgba(255,255,255,.6)}
 .picked{margin-top:14px;background:var(--deep);color:#fff;border-radius:10px;padding:13px 15px;font-size:15px;font-weight:600}
 .picked:empty{display:none}
+
+/* ---------- 料金の目安 ---------- */
+.price{background:var(--paper);border-block:1px solid var(--line)}
+.price-h{font-size:16px;font-weight:800;margin-top:18px}
+.price-h span{display:block;font-size:13px;font-weight:700;color:var(--muted)}
+.price-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;margin-top:8px;max-width:760px}
+.price-item{background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.price-item span{display:block;font-size:13px;font-weight:700;color:var(--muted)}
+.price-item b{font-size:22px;font-weight:800;letter-spacing:-.01em}
+.price-item b small{font-size:13px;margin-left:1px}
 
 /* ---------- こんな方に ---------- */
 .who{background:var(--paper);border-block:1px solid var(--line)}
@@ -228,6 +250,7 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     </div>
     <nav class="topnav">
       <a href="#availability">空き状況</a>
+      <a href="fees.html">料金</a>
       <a href="#strength">当施設の強み</a>
       <a href="#guide">ご利用の流れ</a>
       <a href="#transport">送迎・持ち物</a>
@@ -242,8 +265,9 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="hero-copy">
       <span class="open">2026.11.01 開設</span>
-      <h1>まだ、<br>伸びしろがある。</h1>
-      <p class="sub">それを、一緒に確かめにいく。</p>
+      <!-- ★チラシ（2026-09-26版）と同じキャッチコピー。スマホで変な位置で折り返さないよう、区切りごとに nb で包む -->
+      <h1><span class="nb">あなたの</span><span class="nb"><em>「したい」</em>を</span><br><span class="nb"><em>現実</em>に。</span></h1>
+      <p class="sub"><span class="nb">生活の<em>「できる」</em>を</span><span class="nb">プラスにサポート。</span></p>
       <p class="name">短時間デイケア　リハプラス さかもと</p>
       <div class="hero-actions">
         <a class="btn" href="#availability">空き状況を見る</a>
@@ -282,6 +306,22 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <div class="slots" id="slots"></div>
     <p class="updated" data-last-updated></p>
     <p class="picked" id="picked"></p>
+  </div>
+</section>
+
+<!-- ===================== 料金の目安（くわしくは fees.html） ===================== -->
+<!-- ★数字は assets/fees.json から描いています。ここに直接書かない -->
+<section class="price" id="price">
+  <div class="wrap">
+    <div class="kicker">FEES</div>
+    <h2 class="h2">料金の目安</h2>
+    <p class="lead prose">介護保険が使えます。1割負担の方の目安です。</p>
+    <h3 class="price-h">要介護の方<span>1回あたり（送迎のある②クール）</span></h3>
+    <div class="price-grid" id="price-care"></div>
+    <h3 class="price-h">要支援の方<span>ひと月の定額（回数にかかわらず同じ）</span></h3>
+    <div class="price-grid" id="price-support"></div>
+    <p class="note prose" id="price-note" style="margin-top:10px"></p>
+    <a class="btn" href="fees.html" style="margin-top:16px">くわしい料金・ひと月の計算</a>
   </div>
 </section>
 
@@ -371,7 +411,7 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <div>
         <p class="lead prose" style="margin-top:0">ご家族様への説明や、事業所内での回覧にそのままお使いいただけます。表紙を押すとダウンロードできます。</p>
         <a class="dl" href="assets/rehaplus-sakamoto-flyer.pdf" download="リハプラスさかもと_チラシ.pdf">チラシをダウンロード</a>
-        <p class="note" style="margin-top:10px">PDF・A4 2ページ／約6MB</p>
+        <p class="note" style="margin-top:10px">PDF・A4 2ページ／約1.4MB</p>
       </div>
     </div>
   </div>
@@ -485,7 +525,28 @@ async function refresh(){
   }catch{ render(fallback) }
 }
 
+/* 料金の目安（1割・送迎ありのクール・処遇改善加算込み）。計算のしかたは fees.html と同じ */
+async function renderPrice(){
+  try{
+    const f=await (await fetch('assets/fees.json',{cache:'no-cache'})).json();
+    const self=u=>{
+      const t=f.treatment?.status==='confirmed'?Math.round(u*f.treatment.rate):0;
+      const cost=(u+t)*f.unitPrice;
+      return cost-Math.floor(cost*.9);
+    };
+    // 加算は要介護（care）と要支援（support）で別々。介護度ごとに単位が違う加算もある
+    const add=(kind,per,level)=>f[kind].addons.filter(a=>a.status==='confirmed'&&a.per===per)
+      .reduce((s,a)=>s+(typeof a.units==='number'?a.units:(a.units[level]||0)),0);
+    const item=(k,v,per)=>`<div class="price-item"><span>${k}</span><b>${v.toLocaleString('ja-JP')}<small>円${per}</small></b></div>`;
+    document.getElementById('price-care').innerHTML=Object.entries(f.care.units).map(([k,u])=>item(k,self(u+add('care','visit',k)),'／回')).join('');
+    document.getElementById('price-support').innerHTML=Object.entries(f.support.units).map(([k,u])=>item(k,self(u+add('support','month',k)),'／月')).join('');
+    document.getElementById('price-note').textContent=
+      `1単位＝${f.unitPrice}円で計算した、加算を含む目安です。送迎のない①クールは少し安くなります。2割・3割負担の方の金額や、ひと月の合計は「くわしい料金」でご確認ください。`;
+  }catch{ document.getElementById('price').hidden=true }
+}
+
 renderTel();
+renderPrice();
 refresh();
 setInterval(refresh,60000);
 </script>
