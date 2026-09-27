@@ -97,6 +97,14 @@
 .fees .back{display:inline-flex;align-items:center;gap:6px;margin-top:22px;font-weight:700;color:var(--deep);text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px 18px}
 .fees .error{color:#b8470f;font-weight:700}
 
+/* ---------- 開いて見る（単位の内訳など。ページを短くするため最初は閉じる） ---------- */
+.fees details.more{margin-top:14px}
+.fees details.more>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--deep);
+  background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 16px;min-height:46px}
+.fees details.more>summary::-webkit-details-marker{display:none}
+.fees details.more>summary::after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.fees details.more[open]>summary::after{transform:rotate(-135deg) translate(-2px,-1px)}
+
 /* =========== タブレット以上 =========== */
 @media (min-width:768px){
   .fees .head{padding:52px 0 44px}
@@ -112,6 +120,6 @@
   /* 料金表と内訳を左右に並べる */
   .fees .pair{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
   .fees .pair .table,.fees .pair .units{max-width:none}
-  .fees .pair .h3{margin-top:14px}
+  .fees .pair details.more{margin-top:14px}
   .fees .calc{padding:26px 26px}
 }

@@ -10,8 +10,9 @@
 /* ===========================================================
    リハプラス さかもと｜ケアマネジャー向けページ
    ★★いまは「料金だけ」の期間（2026-09-27〜）。<html data-phase="fees-only">
-     - 空き状況（と「料金の目安」の要約）………………… data-later（ページに残したまま隠す／メニューは灰色）
-     - クールの時間・料金の全部（fees.html と同じ）…… data-now（この期間だけ出す）
+     - 空き状況 ………………………………………………………… data-later（ページに残したまま隠す／メニューは灰色）
+     - クールの時間 …………………………………………… data-now（この期間だけ出す）
+     - 料金はトップに「目安」だけ。全部は fees.html（2026-09-27 ページが長すぎるため）
      - こんな方に・強み・ご利用の流れ・送迎と持ち物 …… どちらの期間も出す（2026-09-27 本人指示で戻した）
      - 2026年4月以降に空き状況などを出すとき …………… index.html と fees.html の data-phase を "full" にするだけ
        （空き状況の自動更新は tools/availability-sync.md の3手順がまだ。やらないと「最終更新 9/12」と出る）
@@ -138,11 +139,29 @@ section{padding:44px 0;scroll-margin-top:110px}
 .price{background:var(--paper);border-block:1px solid var(--line)}
 .price-h{font-size:16px;font-weight:800;margin-top:18px}
 .price-h span{display:block;font-size:13px;font-weight:700;color:var(--muted)}
-.price-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;margin-top:8px;max-width:760px}
+.price-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:8px;max-width:760px}
 .price-item{background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .price-item span{display:block;font-size:13px;font-weight:700;color:var(--muted)}
 .price-item b{font-size:22px;font-weight:800;letter-spacing:-.01em}
 .price-item b small{font-size:13px;margin-left:1px}
+.more-fees{margin-top:18px;gap:10px}
+.more-fees span{font-size:19px;line-height:1}
+
+/* ---------- このページの内容（タイル） ---------- */
+.toc{padding:22px 0 26px;background:var(--cream)}
+.toc .kicker{margin-bottom:10px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:84px;padding:12px 4px;text-align:center;
+  text-decoration:none;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);color:var(--deep)}
+.tile-ico{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#eef3f1;color:var(--green)}
+.tile-ico svg{width:21px;height:21px}
+.tile b{font-size:13px;font-weight:700;line-height:1.3}
+.tile:active{background:#eaf3ef}
+
+/* ---------- 上へ戻る ---------- */
+.totop{position:fixed;right:14px;bottom:16px;z-index:30;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  background:var(--deep);color:#fff;box-shadow:0 6px 18px rgba(0,40,40,.25);opacity:0;pointer-events:none;transform:translateY(8px);transition:.2s}
+.totop.show{opacity:1;pointer-events:auto;transform:none}
 
 /* ---------- こんな方に ---------- */
 .who{background:var(--paper);border-block:1px solid var(--line)}
@@ -243,6 +262,8 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   .checks{grid-template-columns:1fr 1fr}
   .steps3{grid-template-columns:repeat(3,1fr)}
   .flow ol{grid-template-columns:1fr 1fr}
+  .tiles{grid-template-columns:repeat(6,1fr);gap:10px}
+  .tile b{font-size:14px}
   .tp-ride{grid-template-columns:200px 1fr;justify-items:start;align-items:center;text-align:left}
   .flyer-grid{grid-template-columns:300px 1fr;gap:34px;align-items:start}
   .bring-item img{width:110px;height:110px}
@@ -280,7 +301,6 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   .ring{width:230px}
 }
 </style>
-<link rel="stylesheet" href="assets/fees.css">
 </head>
 <body>
 
@@ -293,10 +313,9 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     </div>
     <nav class="topnav">
       <!-- ★data-later は「料金だけ」の期間は灰色で押せない。data-now／data-full は期間ごとに片方だけ出る -->
-      <a href="#fees" data-now>料金</a>
+      <a href="#price">料金</a>
       <a href="#courses" data-now>クールの時間</a>
       <a href="#availability" data-later>空き状況</a>
-      <a href="fees.html" data-full>料金</a>
       <a href="#strength">当施設の強み</a>
       <a href="#guide">ご利用の流れ</a>
       <a href="#transport">送迎・持ち物</a>
@@ -317,13 +336,30 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <p class="sub"><span class="nb">生活の<em>「できる」</em>を</span><span class="nb">プラスにサポート。</span></p>
       <p class="name">短時間デイケア　リハプラス さかもと</p>
       <div class="hero-actions">
-        <a class="btn" href="#fees" data-now>料金を見る</a>
+        <a class="btn" href="#price" data-now>料金を見る</a>
         <a class="btn" href="#availability" data-full>空き状況を見る</a>
         <a class="btn light" href="#flyer">チラシを見る</a>
       </div>
     </div>
   </div>
 </section>
+
+<!-- ===================== このページの内容（押すとその段へ） ===================== -->
+<!-- ★ページが長いので、最初に「何が載っているか」を見せて、押したら飛べるようにする（2026-09-27） -->
+<nav class="toc" aria-label="このページの内容">
+  <div class="wrap">
+    <div class="kicker">CONTENTS</div>
+    <div class="tiles">
+      <a class="tile" href="#price"><span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.8 7.8L12 12l3.2-4.2M12 12v5M9.2 12.6h5.6M9.2 15h5.6"/></svg></span><b>料金</b></a>
+      <a class="tile" href="#courses" data-now><span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><b>クールの時間</b></a>
+      <a class="tile" href="#availability" data-full><span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><b>空き状況</b></a>
+      <a class="tile" href="#strength"><span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 16.2l-4.8 2.5.9-5.4-3.9-3.8 5.4-.8z"/></svg></span><b>当施設の強み</b></a>
+      <a class="tile" href="#guide"><span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6.5h10M9 12h10M9 17.5h10"/><circle cx="5" cy="6.5" r="1.3"/><circle cx="5" cy="12" r="1.3"/><circle cx="5" cy="17.5" r="1.3"/></svg></span><b>ご利用の流れ</b></a>
+      <a class="tile" href="#transport"><span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5V16a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 16zM5 11h14M7.5 20v-2.5M16.5 20v-2.5"/><circle cx="8.5" cy="14.2" r=".6"/><circle cx="15.5" cy="14.2" r=".6"/></svg></span><b>送迎・持ち物</b></a>
+      <a class="tile" href="#flyer"><span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4V20.5H7z"/><path d="M14 3.5v4h4M9.5 12h6M9.5 15h6M9.5 18h4"/></svg></span><b>チラシ</b></a>
+    </div>
+  </div>
+</nav>
 
 <!-- ===================== 営業日 ===================== -->
 <!-- ★曜日を並べて、読まなくても分かるようにしています -->
@@ -369,7 +405,7 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
 
 <!-- ===================== 料金の目安（くわしくは fees.html） ===================== -->
 <!-- ★数字は assets/fees.json から描いています。ここに直接書かない -->
-<section class="price" id="price" data-later>
+<section class="price" id="price">
   <div class="wrap">
     <div class="kicker">FEES</div>
     <h2 class="h2">料金の目安</h2>
@@ -379,137 +415,10 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <h3 class="price-h">要支援の方<span>ひと月の定額（回数にかかわらず同じ）</span></h3>
     <div class="price-grid" id="price-support"></div>
     <p class="note prose" id="price-note" style="margin-top:10px"></p>
-    <a class="btn" href="fees.html" style="margin-top:16px">くわしい料金・ひと月の計算</a>
+    <a class="btn more-fees" href="fees.html">くわしい料金・ひと月の計算を見る<span aria-hidden="true">→</span></a>
+    <p class="note" style="margin-top:8px">2割・3割負担の方の金額、送迎のない①クールの金額、単位の内訳、契約書などもこちらです。</p>
   </div>
 </section>
-
-<!-- ===================== 料金（いまの期間は、ここがページの中心） ===================== -->
-<!-- ★fees.html と同じ中身。見せ方は assets/fees.css、数字の計算は assets/fees.js（数字そのものは assets/fees.json）
-     ★data-now ＝「料金だけ」の期間だけ出す。2026年4月以降（data-phase="full"）は上の「料金の目安」に戻る -->
-<div class="fees" id="fees" data-now>
-
-<div class="head">
-  <div class="wrap">
-    <div class="kicker">FEES</div>
-    <h2 class="title">料金のご案内</h2>
-    <p class="lead prose">介護保険が使えます。お支払いいただくのは、かかった費用のうち<b>1割〜3割</b>（お手元の「介護保険負担割合証」のとおり）です。</p>
-    <div class="unitbox" id="unitbox"></div>
-    <nav class="jump" aria-label="このページの中">
-      <a href="#care">要介護1〜5の方</a>
-      <a href="#support">要支援1・2の方</a>
-      <a href="#calc">ひと月の目安を計算</a>
-      <a href="#documents">契約書など</a>
-    </nav>
-  </div>
-</div>
-
-<div data-fees-app>
-
-<!-- ===================== 要介護（通所リハビリテーション） ===================== -->
-<section id="care">
-  <div class="wrap">
-    <div class="kind care">要介護1〜5の方<span>通所リハビリテーション</span></div>
-    <h2 class="h2">1回ごとの料金です</h2>
-    <p class="lead prose">通った回数分かかります。送迎のあるクールと、送迎のないクールで金額が変わります。</p>
-    <span class="seg-label">負担割合</span>
-    <div class="seg" data-burden-seg></div>
-    <div class="pair">
-      <div>
-        <table class="table" id="care-table"></table>
-        <p class="caption" id="care-caption"></p>
-      </div>
-      <div>
-        <h3 class="h3">料金の内訳（単位）</h3>
-        <table class="units" id="care-units"></table>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 要支援（介護予防通所リハビリテーション） ===================== -->
-<section id="support" class="alt">
-  <div class="wrap">
-    <div class="kind support">要支援1・2の方<span>介護予防通所リハビリテーション</span></div>
-    <h2 class="h2">ひと月の定額です</h2>
-    <p class="lead prose">通う回数にかかわらず、<b>ひと月ごとに同じ金額</b>です。送迎の有無でも変わりません。</p>
-    <span class="seg-label">負担割合</span>
-    <div class="seg" data-burden-seg></div>
-    <div class="pair">
-      <div>
-        <table class="table" id="support-table"></table>
-        <p class="caption" id="support-caption"></p>
-      </div>
-      <div>
-        <h3 class="h3">料金の内訳（単位）</h3>
-        <table class="units" id="support-units"></table>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 計算 ===================== -->
-<section id="calc">
-  <div class="wrap">
-    <div class="kicker">SIMULATION</div>
-    <h2 class="h2">ひと月の目安を計算する</h2>
-    <p class="lead prose">介護度・負担割合・クール・回数を選ぶと、ひと月にお支払いいただく金額の目安が出ます。</p>
-    <div class="calc">
-      <div class="fields">
-        <div class="field"><label for="c-level">介護度</label><select id="c-level"></select></div>
-        <div class="field"><span class="lab">負担割合</span><div class="seg" data-burden-seg></div></div>
-        <div class="field" id="f-course"><label for="c-course">クール</label><select id="c-course"></select></div>
-        <div class="field" id="f-visits"><label for="c-visits">ひと月の回数</label><select id="c-visits"></select></div>
-      </div>
-      <div class="result" aria-live="polite">
-        <p class="t">ひと月の自己負担の目安</p>
-        <p class="v" id="r-value">—</p>
-        <p class="s" id="r-sub"></p>
-      </div>
-      <p class="caption">ほかの介護サービスと合わせて、介護度ごとのひと月の上限（区分支給限度基準額）を超えた分は、全額ご負担になります。ご利用の回数は、担当のケアマネジャーと相談して決まります。</p>
-      <details class="breakdown">
-        <summary>計算の内訳を見る</summary>
-        <table class="bd" id="r-bd"></table>
-      </details>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== 実費 ===================== -->
-<section id="extras" class="alt">
-  <div class="wrap">
-    <div class="kicker">OTHER COSTS</div>
-    <h2 class="h2">介護保険以外の費用</h2>
-    <p class="lead prose">食事・入浴はありませんので、食事代・入浴にかかる費用はありません。</p>
-    <div id="extras-body"></div>
-  </div>
-</section>
-
-<!-- ===================== 書類 ===================== -->
-<section id="documents">
-  <div class="wrap">
-    <div class="kicker">DOCUMENTS</div>
-    <h2 class="h2">契約書・重要事項説明書</h2>
-    <div class="docs" id="docs"></div>
-  </div>
-</section>
-
-<!-- ===================== 共有・ご注意 ===================== -->
-<section id="share" class="alt">
-  <div class="wrap">
-    <div class="kicker">SHARE</div>
-    <h2 class="h2">このページをご家族にも</h2>
-    <div class="share">
-      <img src="assets/qr-fees.png" width="480" height="480" alt="この料金ページのQRコード">
-      <p>スマートフォンのカメラで読み取ると、この料金のページが開きます。ご家族への説明にお使いください。</p>
-    </div>
-    <h3 class="h3">ご注意</h3>
-    <ul class="cautions" id="cautions"></ul>
-  </div>
-</section>
-
-</div>
-
-</div>
 
 <!-- ===================== こんな方に ===================== -->
 <section class="who" id="who">
@@ -632,6 +541,8 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <div class="telbox" id="tel-area"></div>
   </div>
 </section>
+
+<a class="totop" href="#" aria-label="ページの上へ戻る"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14l6-6 6 6"/></svg></a>
 
 <footer>
   短時間デイケア　リハプラス さかもと<br>
@@ -763,6 +674,10 @@ async function renderPrice(){
 }
 
 renderTel();
+renderPrice();
+/* 「上へ」ボタンは、最初の画面を過ぎたら出す */
+const totop=document.querySelector('.totop');
+addEventListener('scroll',()=>totop.classList.toggle('show',scrollY>innerHeight),{passive:true});
 if(document.documentElement.dataset.phase==='fees-only'){
   // ★「料金だけ」の期間：空き状況は読みに行かない（クールの時間だけ出す）。メニューの準備中の項目は押せなくする
   renderCourses();
@@ -771,11 +686,10 @@ if(document.documentElement.dataset.phase==='fees-only'){
     a.addEventListener('click',e=>e.preventDefault());
   });
 }else{
-  renderPrice();
   refresh();
   setInterval(refresh,60000);
 }
 </script>
-<script src="assets/fees.js"></script>
+
 </body>
 </html>
