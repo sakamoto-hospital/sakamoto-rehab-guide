@@ -60,7 +60,7 @@ section{padding:40px 0;scroll-margin-top:110px}
 [data-phase="fees-only"] [data-full]{display:none}
 [data-phase="fees-only"] .topnav a[data-later]{order:2}
 [data-phase="fees-only"] .soon{order:1;margin-left:4px}
-[data-phase="full"] .soon{display:none}
+[data-phase="full"] .soon,[data-phase="full"] [data-now]{display:none}
 footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:22px 0 30px;text-align:center;line-height:1.9}
 
 /* =========== タブレット以上 =========== */
@@ -82,7 +82,7 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   .topnav a{background:none;border:none;padding:8px 10px;font-size:13.5px}
   .topnav a[aria-current]{background:none;color:var(--orange)}
   .topnav a:hover{color:var(--orange)}
-  .topnav a[aria-disabled]{background:none;border:none;color:#a9b5b1}
+  .topnav a[aria-disabled]{background:none;border:none;color:#a9b5b1;padding:8px 6px;font-size:12.5px}
 }
 </style>
 <link rel="stylesheet" href="assets/fees.css">
@@ -98,7 +98,8 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <nav class="topnav">
       <a href="./#availability" data-later>空き状況</a>
       <a href="fees.html" aria-current="page">料金</a>
-      <a href="./#strength" data-later>当施設の強み</a>
+      <a href="./#courses" data-now>クールの時間</a>
+      <a href="./#strength">当施設の強み</a>
       <a href="./#guide" data-later>ご利用の流れ</a>
       <a href="./#transport" data-later>送迎・持ち物</a>
       <a href="./#flyer">チラシ</a>

@@ -10,8 +10,9 @@
 /* ===========================================================
    リハプラス さかもと｜ケアマネジャー向けページ
    ★★いまは「料金だけ」の期間（2026-09-27〜）。<html data-phase="fees-only">
-     - 空き状況・こんな方に・強み・ご利用の流れ・送迎 …… data-later（ページに残したまま隠す／メニューは灰色）
-     - 料金の全部（fees.html と同じ）………………………… data-now（この期間だけ出す）
+     - 空き状況・こんな方に・ご利用の流れ・送迎 ………… data-later（ページに残したまま隠す／メニューは灰色）
+     - クールの時間・料金の全部（fees.html と同じ）…… data-now（この期間だけ出す）
+     - 強み（理学療法士が評価します）………………………… どちらの期間も出す
      - 2026年4月以降に空き状況などを出すとき …………… index.html と fees.html の data-phase を "full" にするだけ
        （空き状況の自動更新は tools/availability-sync.md の3手順がまだ。やらないと「最終更新 9/12」と出る）
    ★直すときによく触るところ
@@ -151,13 +152,14 @@ section{padding:44px 0;scroll-margin-top:110px}
   background:var(--orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' d='M5 12.6l4.6 4.6L19 7.6'/%3E%3C/svg%3E") center/15px no-repeat}
 
 /* ---------- 強み（写真の上に文字） ---------- */
-.strength{position:relative;padding:0;overflow:hidden}
-.strength>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%}
-/* ★写真が見えなくならない濃さにする */
-.strength::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,42,42,.52),rgba(0,42,42,.8))}
-.strength-inner{position:relative;z-index:1;color:#fff;padding:44px 0}
+/* ★写真は文字の背景に沈めず、そのまま見せる（2026-09-27 本人「いい感じの画像を」）。
+   スマホ・タブレットは写真が上／文字が下、パソコンは文字が左／写真が右 */
+.strength{position:relative;padding:0;overflow:hidden;background:var(--deep)}
+.strength>img{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;object-position:center 35%}
+.strength-inner{position:relative;z-index:1;color:#fff;padding:36px 0 44px}
 .strength-inner .kicker{color:#8fd3b5}
 .strength h2{font-size:26px;font-weight:800}
+.strength h2 .nb{display:inline-block}
 .strength .lead{color:rgba(255,255,255,.88)}
 .steps3{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:10px}
 .steps3 li{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:11px;padding:13px 15px}
@@ -242,10 +244,14 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   .tel-mini{order:3;font-size:13.5px;padding:10px 18px}
   .topnav a{background:none;border:none;padding:8px 10px;font-size:13.5px}
   .topnav a:hover{color:var(--orange)}
-  .topnav a[aria-disabled]{background:none;border:none;color:#a9b5b1}
+  .topnav a[aria-disabled]{background:none;border:none;color:#a9b5b1;padding:8px 6px;font-size:12.5px}
   .hero{min-height:calc(100svh - 72px)}
   .hero-copy{padding:60px 0}
-  .strength-inner{padding:76px 0}
+  .strength{display:grid;grid-template-columns:minmax(0,1fr) 46%}
+  .strength>img{grid-column:2;grid-row:1;height:100%;aspect-ratio:auto;object-position:62% center}
+  .strength-inner{grid-column:1;grid-row:1;padding:76px 0}
+  .strength-inner .wrap{width:auto;margin-left:max(16px,calc((100vw - 1120px) / 2));margin-right:48px}
+  .steps3{grid-template-columns:1fr}
   /* 流れは1行に並べて「順番」が見えるようにする */
   .flow ol{grid-template-columns:repeat(5,1fr);gap:10px}
   .flow li{flex-direction:column;gap:8px;padding:16px 14px}
@@ -266,9 +272,10 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <nav class="topnav">
       <!-- ★data-later は「料金だけ」の期間は灰色で押せない。data-now／data-full は期間ごとに片方だけ出る -->
       <a href="#fees" data-now>料金</a>
+      <a href="#courses" data-now>クールの時間</a>
       <a href="#availability" data-later>空き状況</a>
       <a href="fees.html" data-full>料金</a>
-      <a href="#strength" data-later>当施設の強み</a>
+      <a href="#strength">当施設の強み</a>
       <a href="#guide" data-later>ご利用の流れ</a>
       <a href="#transport" data-later>送迎・持ち物</a>
       <a href="#flyer">チラシ</a>
@@ -313,6 +320,16 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <div class="day off"><b>日</b><span>休み</span></div>
     </div>
     <p class="note" style="margin-top:12px">日曜・祝日はお休みです。</p>
+  </div>
+</section>
+
+<!-- ===================== クールの時間（「料金だけ」の期間だけ。空き枠の数は出さない） ===================== -->
+<!-- ★時間は下の <script> の COURSES から描いています。ここに直接書かない -->
+<section id="courses" data-now>
+  <div class="wrap">
+    <div class="kicker">SCHEDULE</div>
+    <h2 class="h2">クールの時間</h2>
+    <div class="slots" id="course-list"></div>
   </div>
 </section>
 
@@ -487,12 +504,12 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
 </section>
 
 <!-- ===================== 強み（写真の上に文字） ===================== -->
-<section class="strength" id="strength" data-later>
+<section class="strength" id="strength">
   <img src="assets/self-training.jpg" width="900" height="600" loading="lazy" alt="機器を使ったトレーニングに取り組む利用者と、見守るスタッフ">
   <div class="strength-inner">
     <div class="wrap">
       <div class="kicker">OUR STRENGTH</div>
-      <h2>理学療法士が、<br>一人ひとりを評価します。</h2>
+      <h2>理学療法士が、<br><span class="nb">一人ひとりを</span><span class="nb">評価します。</span></h2>
       <p class="lead prose">どこに問題があるのかを見極めて、そこに対して治療する。ここがいちばんの強みです。</p>
       <ul class="steps3">
         <li><b>診る</b><span>歩き方、関節の動き、筋力、痛み。</span></li>
@@ -608,6 +625,17 @@ function renderTel(){
   area.innerHTML=`<a class="tel-link" href="${href}">${TEL}</a><a class="tel-cta" href="${href}">タップして電話をかける</a>`;
 }
 
+/* 「料金だけ」の期間に出す、クールの時間（空き枠の数は出さない） */
+function renderCourses(){
+  const el=document.getElementById('course-list');
+  el.innerHTML=COURSES.filter(c=>c.status==='open').map(c=>
+    `<article class="slot"><div class="slot-head"><span class="slot-no">${c.no}クール</span><span class="slot-time">${c.time}</span></div>`+
+    (c.ride?`<div class="ride yes">${BUS}<span>送迎あり</span></div>`:`<div class="ride no">${BUS}<span>送迎なし（直接お越しください）</span></div>`)+
+    '</article>').join('');
+  const later=COURSES.filter(c=>c.status==='planned');
+  if(later.length)el.insertAdjacentHTML('beforeend',`<p class="later">午後（${later.map(c=>c.no+'クール '+c.time).join('／')}）は検討中です。</p>`);
+}
+
 function stamp(iso){
   if(!iso)return'';
   const d=new Date(iso);
@@ -694,7 +722,8 @@ async function renderPrice(){
 
 renderTel();
 if(document.documentElement.dataset.phase==='fees-only'){
-  // ★「料金だけ」の期間：空き状況は読みに行かない。メニューの準備中の項目は押せなくする
+  // ★「料金だけ」の期間：空き状況は読みに行かない（クールの時間だけ出す）。メニューの準備中の項目は押せなくする
+  renderCourses();
   document.querySelectorAll('.topnav a[data-later]').forEach(a=>{
     a.setAttribute('aria-disabled','true');a.tabIndex=-1;
     a.addEventListener('click',e=>e.preventDefault());
