@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/hooks/session-sync.sh\"",
+            "timeout": 60,
+            "statusMessage": "最新の状態を取り込んでいます…"
+          }
+        ]
+      }
+    ]
+  }
+}
