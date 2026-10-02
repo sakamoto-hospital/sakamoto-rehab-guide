@@ -3,12 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="短時間デイケア リハプラス さかもとの料金のご案内。介護保険の自己負担（1割〜3割）の目安と、ひと月の目安の計算。">
-<meta name="theme-color" content="#004d4d">
-<title>料金のご案内｜リハプラス さかもと</title>
+<meta name="description" content="短時間専門デイケア タクト・リハさかもとの料金のご案内。介護保険の自己負担（1割〜3割）の目安と、ひと月の目安の計算。">
+<meta name="theme-color" content="#0d2285">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<title>料金のご案内｜タクト・リハさかもと</title>
 <style>
 /* ===========================================================
-   リハプラス さかもと｜料金のご案内
+   タクト・リハさかもと｜料金のご案内
    ★数字はこのファイルに書かない。すべて assets/fees.json から描く
    ★料金の見せ方（CSS）と計算・描画（JS）は assets/fees.css・assets/fees.js。
      トップ（index.html）も同じ2つを読むので、直すとトップの料金も同じく変わる
@@ -17,16 +20,17 @@
      - 実費を載せる … fees.json の extras に {"name","price","per","note"} を足す
      - 契約書など …… PDF を assets/docs/ に置き、documents の pdf と qr にパスを入れる
                       （QR は tools/build/make-qr.mjs で作る）
-   ★public です。電話番号・法人名・利用者や職員の名前は載せない
+   ★public です。法人名・利用者や職員の名前は載せない（電話番号 0879-24-9030 は 2026-10-02 本人の指示で掲載）
    =========================================================== */
 :root{
-  --ink:#083f42; --deep:#004d4d; --green:#1b7a59; --cream:#faf9f3; --paper:#fffefa;
-  --line:#d8e3dd; --orange:#ee641e; --muted:#4f6b65; --soft:#eef3f1;
+  /* ★色は看板（完成版・2026-10-02）とチラシに合わせる（index.html と同じ） */
+  --ink:#14238a; --deep:#0d2285; --green:#027c6c; --cream:#f4f9fe; --paper:#ffffff;
+  --line:#d6e6f4; --orange:#e3175e; --sky:#66d1fd; --muted:#4a5a86; --soft:#eaf4fd;
   --shadow:0 4px 16px rgba(7,65,59,.07); --radius:14px;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{margin:0;font:400 16.5px/1.75 -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+body{margin:0;font:400 16.5px/1.75 "Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
   color:var(--ink);background:var(--cream);letter-spacing:.01em}
 img{max-width:100%;height:auto;display:block}
 h1,h2,h3{margin:0;line-height:1.35;letter-spacing:-.01em}
@@ -45,7 +49,10 @@ section{padding:40px 0;scroll-margin-top:110px}
 .topbar{position:sticky;top:0;z-index:20;background:rgba(255,254,250,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
 .topbar .wrap{display:flex;flex-direction:column;gap:6px;padding:9px 0}
 .bar1{display:flex;align-items:center;justify-content:space-between;gap:14px}
-.brand{font-size:18px;font-weight:800;line-height:1.25;white-space:nowrap;text-decoration:none}
+.brand{font-size:18px;font-weight:800;line-height:1.25;white-space:nowrap;text-decoration:none;display:flex;align-items:center;gap:8px}
+.brand img{width:40px;height:auto;flex:none}
+.brand span{display:block}
+@media (max-width:374px){.brand{font-size:15px;gap:5px}.brand img{width:26px}.brand small{font-size:9.5px;letter-spacing:.04em}.tel-mini{padding:7px 9px;font-size:12px}}
 .brand small{display:block;font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.1em}
 .tel-mini{flex:none;background:var(--orange);color:#fff;text-decoration:none;font-weight:700;font-size:12.5px;padding:8px 13px;border-radius:999px;white-space:nowrap}
 .topnav{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -61,7 +68,7 @@ section{padding:40px 0;scroll-margin-top:110px}
 [data-phase="fees-only"] .topnav a[data-later]{order:2}
 [data-phase="fees-only"] .soon{order:1;margin-left:4px}
 [data-phase="full"] .soon,[data-phase="full"] [data-now]{display:none}
-footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:22px 0 30px;text-align:center;line-height:1.9}
+footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:22px 0 30px;text-align:center;line-height:1.9}
 
 /* =========== タブレット以上 =========== */
 @media (min-width:768px){
@@ -92,7 +99,7 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
 <header class="topbar">
   <div class="wrap">
     <div class="bar1">
-      <a class="brand" href="./">リハプラス さかもと<small>短時間デイケア</small></a>
+      <a class="brand" href="./"><img src="assets/clover.svg" width="40" height="31" alt=""><span>タクト・リハさかもと<small>短時間専門デイケア</small></span></a>
       <a class="tel-mini" href="./#contact">お問い合わせ</a>
     </div>
     <nav class="topnav">
@@ -119,6 +126,7 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <nav class="jump" aria-label="このページの中">
       <a href="#care">要介護1〜5の方</a>
       <a href="#support">要支援1・2の方</a>
+      <a href="#addons">加算の一覧</a>
       <a href="#calc">ひと月の目安を計算</a>
       <a href="#documents">契約書など</a>
     </nav>
@@ -170,6 +178,17 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
         </details>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ===================== 加算の一覧（要支援・要介護のちがい） ===================== -->
+<!-- ★料金表では要支援・要介護の加算が混ざって分かりにくいので、どちらに付くかを一覧にする（2026-10-02 本人指示）。中身は fees.json から描く -->
+<section id="addons">
+  <div class="wrap">
+    <div class="kicker">ADD-ONS</div>
+    <h2 class="h2">加算の一覧（要支援・要介護のちがい）</h2>
+    <p class="lead prose">○のついている方にかかります。<span class="cond">条件あり</span>は、条件に当てはまる方だけにかかるもので、上の料金の目安には含めていません。</p>
+    <table class="matrix" id="addon-matrix"></table>
   </div>
 </section>
 
@@ -239,7 +258,8 @@ footer{background:#02383a;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
 </div>
 
 <footer>
-  短時間デイケア　リハプラス さかもと<br>
+  短時間専門デイケア　タクト・リハさかもと（阪本病院 介護医療院内）<br>
+  お問い合わせ <a href="tel:0879249030" style="color:#fff;font-weight:700">0879-24-9030</a>（「デイケアについて」とお申し付けください）<br>
   2026年11月1日 開設
 </footer>
 

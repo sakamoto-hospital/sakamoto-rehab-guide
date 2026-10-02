@@ -16,10 +16,10 @@ GitHub の assets/availability.json を更新
 
 ## 1. スプレッドシートに Apps Script を入れる
 
-1. Google ドライブの **「リハプラス さかもと 空き状況」** を開きます（作成済み。定員・曜日・クールの表が入っています）。
+1. Google ドライブの **「リハプラス さかもと 空き状況」**（旧名のときに作ったシート。名前はそのままで動きます）を開きます（作成済み。定員・曜日・クールの表が入っています）。
 2. メニューの **拡張機能 → Apps Script** を開きます。
 3. 最初から入っているコードをすべて消し、[`tools/availability-sync.gs`](availability-sync.gs) の中身を貼り付けて保存します。
-   コピー元：`https://raw.githubusercontent.com/kaitokuwajima/sakamoto-rehab-guide/main/tools/availability-sync.gs`
+   コピー元：`https://raw.githubusercontent.com/sakamoto-hospital/sakamoto-rehab-guide/main/tools/availability-sync.gs`
    （全選択 → コピー → Apps Script に貼り付け）
 
 > シート名は「空き状況」でなくても動きます（見つからない場合は先頭のシートを読みます）。
@@ -29,7 +29,7 @@ GitHub の assets/availability.json を更新
 1. GitHub → 右上のアイコン → **Settings** → 一番下の **Developer settings**
 2. **Personal access tokens → Fine-grained tokens → Generate new token**
 3. 次のように設定します。
-   - **Repository access**：Only select repositories → `kaitokuwajima/sakamoto-rehab-guide`
+   - **Repository access**：Only select repositories → `sakamoto-hospital/sakamoto-rehab-guide`
    - **Permissions → Repository permissions → Contents**：**Read and write**
    - **Expiration（有効期限）**：1年など。期限が切れると自動反映が止まるので、カレンダーに入れておくと安心です。
 4. 表示されたトークン（`github_pat_…`）をコピーします。**この画面を閉じると二度と見られません。**

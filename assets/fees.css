@@ -3,11 +3,11 @@
    ★数字はここに書かない。すべて assets/fees.json から assets/fees.js が描く
    ★トップのクラス名とぶつからないよう、すべて .fees の中だけに効かせる
    =========================================================== */
-.fees{--soft:#eef3f1;scroll-margin-top:100px}
+.fees{--soft:#eaf4fd;scroll-margin-top:100px}
 .fees .alt{background:var(--paper);border-block:1px solid var(--line)}
 /* ---------- ページの頭 ---------- */
 .fees .head{background:var(--deep);color:#fff;padding:34px 0 30px}
-.fees .head .kicker{color:#8fd3b5}
+.fees .head .kicker{color:#9fd8ff}
 .fees .head h1,.fees .head .title{font-size:clamp(30px,7vw,46px);font-weight:800;letter-spacing:-.02em}
 .fees .head .lead{color:rgba(255,255,255,.86);font-size:16px;margin-top:10px}
 .fees .unitbox{margin-top:18px;background:#fff;color:var(--ink);border-radius:12px;padding:16px;max-width:640px}
@@ -33,7 +33,7 @@
 .fees .yen small{font-size:13px;font-weight:700;margin-left:1px}
 .fees .unit{display:block;font-size:11.5px;color:var(--muted);font-weight:400;margin-top:1px}
 .fees .ride-tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 8px;margin-top:3px}
-.fees .ride-tag.yes{background:#fff1e6;color:#b8470f}
+.fees .ride-tag.yes{background:#fde6ee;color:#c0124f}
 .fees .ride-tag.no{background:#fff;color:var(--muted);border:1px solid var(--line)}
 .fees .nw{display:inline-block}
 .fees .caption{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7}
@@ -95,7 +95,7 @@
 .fees .share p{font-size:14.5px;color:var(--muted)}
 .fees .cautions{margin:12px 0 0;padding-left:1.2em;font-size:14px;color:var(--muted);line-height:1.8}
 .fees .back{display:inline-flex;align-items:center;gap:6px;margin-top:22px;font-weight:700;color:var(--deep);text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px 18px}
-.fees .error{color:#b8470f;font-weight:700}
+.fees .error{color:#c0124f;font-weight:700}
 
 /* ---------- 開いて見る（単位の内訳など。ページを短くするため最初は閉じる） ---------- */
 .fees details.more{margin-top:14px}
@@ -123,3 +123,15 @@
   .fees .pair details.more{margin-top:14px}
   .fees .calc{padding:26px 26px}
 }
+
+/* ---------- 加算の一覧（要支援・要介護のちがい） ---------- */
+.fees .cond{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:11.5px;font-weight:700;color:var(--orange);background:#fde6ee;border:1px solid #f5b3c8;vertical-align:2px;white-space:nowrap}
+.fees .matrix{width:100%;max-width:760px;border-collapse:separate;border-spacing:0;margin-top:16px;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.fees .matrix th,.fees .matrix td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;font-size:15px;line-height:1.5}
+.fees .matrix thead th{background:var(--deep);color:#fff;font-size:14px}
+.fees .matrix thead th:not(:first-child),.fees .matrix td{text-align:center;width:4.8em}
+.fees .matrix tbody tr:last-child th,.fees .matrix tbody tr:last-child td{border-bottom:0}
+.fees .matrix tbody th{font-weight:700}
+.fees .matrix .yes{color:var(--green);font-weight:800;font-size:18px}
+.fees .matrix .no{color:#a7b3c9}
+@media (max-width:420px){.fees .matrix th,.fees .matrix td{padding:9px 8px;font-size:14px}.fees .matrix thead th:not(:first-child),.fees .matrix td{width:3.6em}}

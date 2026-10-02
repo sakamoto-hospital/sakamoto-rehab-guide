@@ -5,7 +5,7 @@
 
 | ファイル | 使っている場所 |
 |---|---|
-| `assets/rehaplus-sakamoto-flyer.pdf` | チラシのダウンロード |
+| `assets/takt-reha-sakamoto-flyer.pdf` | チラシのダウンロード |
 | `assets/flyer-cover.jpg` | チラシ欄の表紙の絵 |
 | `assets/icon-drink.png` | 持ち物「お飲み物」の絵（チラシ2ページ目から切り出し） |
 | `assets/icon-towel.png` | 持ち物「汗を拭くタオル」の絵（同上） |
@@ -32,8 +32,11 @@ node update-flyer.mjs "C:/Users/.../新しいチラシ.pdf"
 ## QRコードを作る
 
 ```sh
-node make-qr.mjs https://kaitokuwajima.github.io/sakamoto-rehab-guide/fees.html ../../assets/qr-fees.png
+node make-qr.mjs https://sakamoto-hospital.github.io/sakamoto-rehab-guide/fees.html ../../assets/qr-fees.png
 ```
 
 契約書などのPDFを `assets/docs/` に置いたときも、同じようにQRを作って `assets/fees.json` の `documents` に
 `"pdf"` と `"qr"` のパスを入れると、料金ページにダウンロードボタンとQRが出ます。
+
+※ 2026-10-02 のタクト・リハさかもと版チラシは、レイアウトが変わったので `update-flyer.mjs` の ICONS の切り出し位置は合っていません。
+　 この版の PDF・表紙・絵は手作業で差し替えました。次にこのスクリプトを使うときは ICONS の位置を直してから使ってください。

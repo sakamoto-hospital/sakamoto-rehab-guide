@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 200">
+  <defs>
+    <path id="leaf" d="M0 -6 C -8 -14 -44 -30 -44 -60 C -44 -80 -24 -90 -11 -82 C -5 -78 0 -72 0 -66 C 0 -72 5 -78 11 -82 C 24 -90 44 -80 44 -60 C 44 -30 8 -14 0 -6 Z"/>
+    <linearGradient id="gTeal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b7a68"/><stop offset="1" stop-color="#11907a"/></linearGradient>
+    <linearGradient id="gTeal2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e8a76"/><stop offset="1" stop-color="#22b9b0"/></linearGradient>
+    <linearGradient id="gPink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f25a86"/><stop offset="1" stop-color="#fb7c9c"/></linearGradient>
+  </defs>
+  <g transform="translate(100 100)" stroke="#fff" stroke-width="5" stroke-linejoin="round">
+    <use href="#leaf" transform="rotate(-45)" fill="url(#gTeal)"/>
+    <use href="#leaf" transform="rotate(45)" fill="url(#gTeal)"/>
+    <use href="#leaf" transform="rotate(-135)" fill="url(#gTeal2)"/>
+    <use href="#leaf" transform="rotate(135)" fill="url(#gPink)"/>
+    <rect x="-11" y="-32" width="22" height="64" rx="2" fill="#fff" stroke="none"/>
+    <rect x="-32" y="-11" width="64" height="22" rx="2" fill="#fff" stroke="none"/>
+  </g>
+  <ellipse cx="208" cy="112" rx="15" ry="11" transform="rotate(-20 208 112)" fill="#f7869f"/>
+  <ellipse cx="190" cy="146" rx="13" ry="9" transform="rotate(-25 190 146)" fill="#f7869f"/>
+</svg>

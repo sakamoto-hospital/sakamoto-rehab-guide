@@ -1,6 +1,6 @@
 // 新しいチラシPDFから、公開ページで使う4つのファイルを同じ版でそろえて作り直す。
 // 使い方: node update-flyer.mjs <チラシ.pdf>
-//   → ../../assets/rehaplus-sakamoto-flyer.pdf  （画質を保って軽くしたPDF）
+//   → ../../assets/takt-reha-sakamoto-flyer.pdf  （画質を保って軽くしたPDF）
 //     ../../assets/flyer-cover.jpg              （1ページ目の表紙）
 //     ../../assets/icon-drink.png / icon-towel.png（2ページ目の持ち物の絵）
 // ★チラシのレイアウトが変わったら、下の ICONS の切り出し位置（ページに対する割合）を直す。
@@ -74,9 +74,9 @@ for (let i = 1; i <= doc.numPages; i++) {
   const jpg = await out.embedJpg(await canvas.encode('jpeg', JPEG_QUALITY));
   out.addPage([size.width, size.height]).drawImage(jpg, { x: 0, y: 0, width: size.width, height: size.height });
 }
-out.setTitle('短時間デイケア リハプラス さかもと ご案内');
+out.setTitle('短時間専門デイケア タクト・リハさかもと ご案内');
 const pdfBytes = await out.save();
-fs.writeFileSync(path.join(ASSETS, 'rehaplus-sakamoto-flyer.pdf'), pdfBytes);
+fs.writeFileSync(path.join(ASSETS, 'takt-reha-sakamoto-flyer.pdf'), pdfBytes);
 
 // ② 表紙
 const first = pages[0];

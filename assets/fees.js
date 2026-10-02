@@ -55,7 +55,7 @@ function renderCare(){
   document.getElementById('care-table').innerHTML=h+'</tbody>';
   const m=addons('care','month');
   document.getElementById('care-caption').innerHTML=
-    `${state.burden}割負担の場合の、1回あたりの目安です（${addons('care','visit').map(a=>a.name).join('・')}${addons('care','visit').length?'・':''}処遇改善加算を含みます）。`+
+    `${state.burden}割負担の場合の、1回あたりの目安です（${addons('care','visit').map(a=>a.name).join('・')}${addons('care','visit').length?'・':''}処遇改善加算を含みます。「条件あり」の加算は含みません）。`+
     `送迎のないクールは、送迎の分（片道${FEES.care.noRide.units}単位×往復）安くなります。`+
     (m.length?`<br>このほか、ひと月に1回 ${m.map(a=>`${a.name}（${a.units}単位）`).join('・')} がかかります。ひと月の合計は「<a href="#calc">ひと月の目安を計算する</a>」でご確認ください。`:'');
 }
@@ -69,20 +69,45 @@ function renderSupport(){
   document.getElementById('support-table').innerHTML=h+'</tbody>';
   const o=FEES.support.over12Months;
   document.getElementById('support-caption').innerHTML=
-    `${state.burden}割負担の場合の、ひと月の目安です（${addons('support','month').map(a=>a.name).join('・')}・処遇改善加算を含みます）。`+
+    `${state.burden}割負担の場合の、ひと月の目安です（${addons('support','month').map(a=>a.name).join('・')}・処遇改善加算を含みます。「条件あり」の加算は含みません）。`+
     (o?`<br>ご利用の開始から12か月を超えると、国の決まりにより、ひと月に${Object.entries(o).map(([k,v])=>`${k}は${v}単位`).join('、')}が差し引かれることがあります（リハビリの会議や国への情報提出などの条件を満たしている場合は差し引かれません）。`:'');
 }
 
 /* 単位の内訳。注記は狭い列に詰めず、行の下に全幅で出す（スマホで読みやすくするため） */
 const row=(k,v,s='')=>`<tr${s?' class="has-note"':''}><td>${k}</td><td>${v}</td></tr>`+(s?`<tr class="sub"><td colspan="2">${s}</td></tr>`:'');
 const grp=t=>`<tr class="grp"><th colspan="2">${t}</th></tr>`;
+const shown=a=>a.status==='confirmed'||a.status==='conditional';
+const COND='<span class="cond">条件あり</span>';
 function addonRows(kind){
-  return FEES[kind].addons.filter(a=>a.status==='confirmed').map(a=>{
-    const per='／'+(a.per==='month'?'1か月':'1回');
+  return FEES[kind].addons.filter(shown).map(a=>{
+    const per='／'+(a.perLabel||(a.per==='month'?'1か月':'1回'));
     // 介護度ごとに単位が違うものは1行ずつ（1行に並べるとスマホで表がはみ出す）
-    const u=typeof a.units==='number'?`${a.units}単位${per}`:Object.entries(a.units).map(([k,v])=>`<span class="nw">${k} ${v}単位${per}</span>`).join('<br>');
-    return row(a.name,u,a.note);
+    const u=a.pct!=null?`基本の${a.pct}％`
+      :typeof a.units==='number'?`${yen(a.units)}単位${per}`
+      :Object.entries(a.units).map(([k,v])=>`<span class="nw">${k} ${v}単位${per}</span>`).join('<br>');
+    return row(a.name+(a.status==='conditional'?COND:''),u,a.note);
   }).join('');
+}
+
+/* 加算・減算が「要支援」「要介護」のどちらに付くかの一覧（料金表では混ざって分かりにくいため・2026-10-02 本人指示） */
+function renderMatrix(){
+  const items=new Map();
+  const put=(name,kind,cond,note)=>{
+    const it=items.get(name)||{name,support:false,care:false,cond,note};
+    it[kind]=true;it.cond=it.cond||cond;if(!it.note)it.note=note;items.set(name,it);
+  };
+  FEES.care.addons.filter(shown).forEach(a=>put(a.name,'care',a.status==='conditional',a.note));
+  FEES.support.addons.filter(shown).forEach(a=>put(a.name,'support',a.status==='conditional',a.note));
+  if(FEES.treatment?.status==='confirmed'){
+    put(FEES.treatment.name,'care',false,FEES.treatment.note);put(FEES.treatment.name,'support',false,'');
+  }
+  put('送迎を行わない場合の減算','care',true,`送迎のない${FEES.courses.filter(x=>!x.ride).map(x=>x.no).join('・')}クールをご利用の場合（片道${FEES.care.noRide.units}単位）。要支援の方は対象外です。`);
+  if(FEES.support.over12Months)put('ご利用開始から12か月を超えた場合の減算','support',true,'条件を満たしている場合は差し引かれません。');
+  const mark=v=>v?'<span class="yes" aria-label="あり">○</span>':'<span class="no" aria-label="なし">—</span>';
+  document.getElementById('addon-matrix').innerHTML=
+    '<thead><tr><th scope="col">加算・減算</th><th scope="col">要支援</th><th scope="col">要介護</th></tr></thead><tbody>'+
+    [...items.values()].map(it=>`<tr><th scope="row">${it.name}${it.cond?COND:''}</th><td>${mark(it.support)}</td><td>${mark(it.care)}</td></tr>`).join('')+
+    '</tbody>';
 }
 const treatmentRow=()=>FEES.treatment?.status==='confirmed'?row(FEES.treatment.name+FEES.treatment.rateLabel,`合計の${pct()}`,FEES.treatment.note):'';
 
@@ -181,7 +206,7 @@ function renderAll(){renderSegs();renderCare();renderSupport();renderCalc()}
   try{
     const res=await fetch('assets/fees.json',{cache:'no-cache'});
     FEES=await res.json();
-    renderStatic();renderAll();renderUnits();renderExtras();renderDocs();
+    renderStatic();renderAll();renderUnits();renderMatrix();renderExtras();renderDocs();
   }catch(e){
     document.querySelector('[data-fees-app]').innerHTML='<section><div class="wrap"><p class="error">料金表を読み込めませんでした。時間をおいて、もう一度開いてください。</p></div></section>';
   }
