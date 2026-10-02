@@ -221,6 +221,14 @@ section{padding:44px 0;scroll-margin-top:110px}
 .km b{display:block;font-size:29px;font-weight:800;line-height:1.25}
 .km span{font-size:13px;opacity:.85}
 
+/* ---------- 初めての方へ（正面玄関・館内案内図） ---------- */
+.access-grid{display:grid;gap:18px;margin-top:14px}
+.access figure{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.access figcaption{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;margin-bottom:10px}
+.ac-no{flex:none;width:26px;height:26px;border-radius:50%;background:var(--deep);color:#fff;display:grid;place-items:center;font-size:14px}
+.access img{width:100%;height:auto;border-radius:10px}
+@media (min-width:768px){.access-grid{grid-template-columns:1fr 1.15fr;align-items:start}}
+
 /* ---------- チラシ（表紙を見せる） ---------- */
 .flyer{background:var(--paper);border-block:1px solid var(--line)}
 .flyer-grid{display:grid;gap:18px;align-items:center;margin-top:14px}
@@ -311,6 +319,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <a href="#strength">当施設の強み</a>
       <a href="#guide">ご利用の流れ</a>
       <a href="#transport">送迎・持ち物</a>
+      <a href="#access">ご案内図</a>
       <a href="#flyer">チラシ</a>
       <span class="soon" data-now>2026年4月以降 公開予定</span>
     </nav>
@@ -389,10 +398,10 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kicker">WHO CAN USE</div>
     <h2 class="h2">こんな方に<br>ご利用いただけます。</h2>
-    <p class="lead prose" style="margin-top:0">「移動能力」で分けた、リハビリ特化の短時間デイケアです。</p>
     <ul class="checks">
-      <li><span>ご自身で歩いて移動できる方<small>歩行器使用の方・屋内歩行レベルの方もご利用いただけます</small></span></li>
+      <li><span>ご自身で歩ける方<small>歩行器・屋内歩行の方もOK</small></span></li>
       <li><span>排泄が自立している方</span></li>
+      <li><span>介護保険の認定をお持ちの方<small>要支援1・2、要介護1〜5の方</small></span></li>
     </ul>
     <p class="note prose" style="margin-top:14px">介護度が高くても、移動が自立していればご相談ください。移動に介助が必要な方・車いすでの送迎が必要な方は、これまでどおり通常の通所リハビリテーションをご案内します。</p>
   </div>
@@ -465,6 +474,29 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   </div>
 </section>
 
+<!-- ===================== 初めての方へ（正面玄関・館内案内図） ===================== -->
+<!-- ★チラシ2ページ目と同じ。正面玄関の写真と阪本病院1階の案内図（2026-10-02 本人指示で追加） -->
+<section class="access" id="access">
+  <div class="wrap">
+    <div class="kicker">ACCESS</div>
+    <h2 class="h2">初めての方へ ご案内</h2>
+    <p class="lead prose" style="margin-top:0">この正面玄関から入り、館内案内図のように進みます。</p>
+    <div class="access-grid">
+      <figure>
+        <figcaption><span class="ac-no">1</span>正面玄関</figcaption>
+        <img src="assets/entrance.jpg" width="1200" height="857" loading="lazy" alt="阪本病院の正面玄関">
+      </figure>
+      <figure>
+        <figcaption><span class="ac-no">2</span>館内案内図（阪本病院 1階）</figcaption>
+        <a href="assets/floor-map.jpg" target="_blank" rel="noopener" aria-label="館内案内図を大きく表示">
+          <img src="assets/floor-map.jpg" width="1394" height="844" loading="lazy" alt="阪本病院1階の館内案内図。正面玄関から左手に進んだ先が短時間専門デイケア タクト・リハさかもと">
+        </a>
+        <p class="note" style="margin-top:6px">図を押すと大きく表示されます。</p>
+      </figure>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== チラシ ===================== -->
 <section class="flyer" id="flyer">
   <div class="wrap">
@@ -477,7 +509,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <div>
         <p class="lead prose" style="margin-top:0">ご家族様への説明や、事業所内での回覧にそのままお使いいただけます。表紙を押すとダウンロードできます。</p>
         <a class="dl" href="assets/takt-reha-sakamoto-flyer.pdf" download="タクト・リハさかもと_チラシ.pdf">チラシをダウンロード</a>
-        <p class="note" style="margin-top:10px">PDF・A4 2ページ／約2.5MB</p>
+        <p class="note" style="margin-top:10px">PDF・A4 2ページ／約2.6MB</p>
       </div>
     </div>
   </div>

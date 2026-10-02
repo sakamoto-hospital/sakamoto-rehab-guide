@@ -48,8 +48,13 @@ function renderCare(){
     cs.map(c=>`<th scope="col"><b>${c.no}クール</b><span class="ride-tag ${c.ride?'yes':'no'}">${c.ride?'送迎あり':'送迎なし'}</span></th>`).join('')+'</tr></thead><tbody>';
   for(const level of Object.keys(FEES.care.units)){
     h+=`<tr><th scope="row">${level}</th>`+cs.map(c=>{
-      const u=careVisitUnits(level,c.ride);
-      return `<td><span class="yen">${yen(bill(u).self)}<small>円</small></span><span class="unit"><span class="nw">${yen(u)}単位</span><span class="nw">＋処遇改善</span></span></td>`;
+      const u=careVisitUnits(level,c.ride), b=bill(u);
+      // 何が足されているかを全部出す（「＋処遇改善」だけだと中身が分からない・2026-10-02 本人指示）
+      const parts=[`基本${FEES.care.units[level]}`,...addons('care','visit').map(a=>`${a.short||a.name}${a.units}`)];
+      const minus=c.ride?'':`−送迎なし${noRideUnits()}`;
+      return `<td><span class="yen">${yen(b.self)}<small>円</small></span><span class="unit">`+
+        `<span class="nw">${parts.join('＋')}${minus}</span>`+
+        `<span class="nw">＝${yen(u)}＋処遇改善${b.t}</span><span class="nw">＝<b>${yen(b.total)}単位</b></span></span></td>`;
     }).join('')+'</tr>';
   }
   document.getElementById('care-table').innerHTML=h+'</tbody>';
@@ -57,14 +62,17 @@ function renderCare(){
   document.getElementById('care-caption').innerHTML=
     `${state.burden}割負担の場合の、1回あたりの目安です（${addons('care','visit').map(a=>a.name).join('・')}${addons('care','visit').length?'・':''}処遇改善加算を含みます。「条件あり」の加算は含みません）。`+
     `送迎のないクールは、送迎の分（片道${FEES.care.noRide.units}単位×往復）安くなります。`+
-    (m.length?`<br>このほか、ひと月に1回 ${m.map(a=>`${a.name}（${a.units}単位）`).join('・')} がかかります。ひと月の合計は「<a href="#calc">ひと月の目安を計算する</a>」でご確認ください。`:'');
+    (m.length?`<br><b>このほか、ひと月に1回 ${m.map(a=>`${a.name}（${a.units}単位）`).join('・')} が加わります。</b>ひと月の合計は「<a href="#calc">ひと月の目安を計算する</a>」でご確認ください。`:'')+
+    `<br>処遇改善加算は、本来はひと月の合計に${pct()}を掛けて計算します。この表は1回分で計算した目安のため、実際のご請求とは数円ずれることがあります。`;
 }
 
 function renderSupport(){
   let h='<thead><tr><th scope="col" style="text-align:left;padding-left:14px">介護度</th><th scope="col"><b>ひと月</b>何回通っても同じ</th></tr></thead><tbody>';
   for(const level of Object.keys(FEES.support.units)){
-    const u=supportMonthUnits(level);
-    h+=`<tr><th scope="row">${level}</th><td><span class="yen">${yen(bill(u).self)}<small>円</small></span><span class="unit"><span class="nw">${yen(u)}単位</span><span class="nw">＋処遇改善</span></span></td></tr>`;
+    const u=supportMonthUnits(level), b=bill(u);
+    const parts=[`基本${yen(FEES.support.units[level])}`,...addons('support','month').map(a=>`${a.short||a.name}${addonUnits(a,level)}`)];
+    h+=`<tr><th scope="row">${level}</th><td><span class="yen">${yen(b.self)}<small>円</small></span><span class="unit">`+
+      `<span class="nw">${parts.join('＋')}</span><span class="nw">＝${yen(u)}＋処遇改善${b.t}</span><span class="nw">＝<b>${yen(b.total)}単位</b></span></span></td></tr>`;
   }
   document.getElementById('support-table').innerHTML=h+'</tbody>';
   const o=FEES.support.over12Months;
@@ -90,23 +98,42 @@ function addonRows(kind){
 }
 
 /* 加算・減算が「要支援」「要介護」のどちらに付くかの一覧（料金表では混ざって分かりにくいため・2026-10-02 本人指示） */
+/* 加算1つぶんの「いくら」 */
+function amountOf(a,level){
+  const per='／'+(a.perLabel||(a.per==='month'?'1か月':'1回'));
+  if(a.pct!=null)return `基本の${a.pct}％`;
+  if(typeof a.units==='number')return `${yen(a.units)}単位${per}`;
+  return Object.entries(a.units).map(([k,v])=>`${k} ${v}単位${per}`).join('、');
+}
 function renderMatrix(){
   const items=new Map();
-  const put=(name,kind,cond,note)=>{
-    const it=items.get(name)||{name,support:false,care:false,cond,note};
-    it[kind]=true;it.cond=it.cond||cond;if(!it.note)it.note=note;items.set(name,it);
+  const put=(name,kind,cond,note,amount)=>{
+    const it=items.get(name)||{name,support:false,care:false,cond,note,amount:{}};
+    it[kind]=true;it.cond=it.cond||cond;if(!it.note)it.note=note;it.amount[kind]=amount;items.set(name,it);
   };
-  FEES.care.addons.filter(shown).forEach(a=>put(a.name,'care',a.status==='conditional',a.note));
-  FEES.support.addons.filter(shown).forEach(a=>put(a.name,'support',a.status==='conditional',a.note));
+  FEES.care.addons.filter(shown).forEach(a=>put(a.name,'care',a.status==='conditional',a.note,amountOf(a)));
+  FEES.support.addons.filter(shown).forEach(a=>put(a.name,'support',a.status==='conditional',a.note,amountOf(a)));
   if(FEES.treatment?.status==='confirmed'){
-    put(FEES.treatment.name,'care',false,FEES.treatment.note);put(FEES.treatment.name,'support',false,'');
+    const t=FEES.treatment, amt=`ひと月の合計単位の${pct()}`;
+    put(t.name+t.rateLabel,'care',false,t.note,amt);put(t.name+t.rateLabel,'support',false,t.note,amt);
   }
-  put('送迎を行わない場合の減算','care',true,`送迎のない${FEES.courses.filter(x=>!x.ride).map(x=>x.no).join('・')}クールをご利用の場合（片道${FEES.care.noRide.units}単位）。要支援の方は対象外です。`);
-  if(FEES.support.over12Months)put('ご利用開始から12か月を超えた場合の減算','support',true,'条件を満たしている場合は差し引かれません。');
+  put('送迎を行わない場合の減算','care',true,
+    `送迎のない${FEES.courses.filter(x=>!x.ride).map(x=>x.no).join('・')}クールをご利用の場合に、国の決まりで行き・帰りそれぞれ差し引かれます。要支援の方は対象外です。`,
+    `−${FEES.care.noRide.units}単位／片道（往復で−${noRideUnits()}単位）`);
+  if(FEES.support.over12Months)put('ご利用開始から12か月を超えた場合の減算','support',true,
+    'リハビリの会議の開催や国（LIFE）への情報提出などの条件を満たしている場合は、差し引かれません。',
+    Object.entries(FEES.support.over12Months).map(([k,v])=>`${k} −${v}単位／1か月`).join('、'));
   const mark=v=>v?'<span class="yes" aria-label="あり">○</span>':'<span class="no" aria-label="なし">—</span>';
+  const amt=it=>{
+    const s=it.amount.support, c=it.amount.care;
+    if(s&&c&&s===c)return s;
+    return [s?`要支援：${s}`:'',c?`要介護：${c}`:''].filter(Boolean).join('<br>');
+  };
+  // ★加算名を押すと説明が開く（2026-10-02 本人「どういったものかタップしたら見れるように」）
   document.getElementById('addon-matrix').innerHTML=
-    '<thead><tr><th scope="col">加算・減算</th><th scope="col">要支援</th><th scope="col">要介護</th></tr></thead><tbody>'+
-    [...items.values()].map(it=>`<tr><th scope="row">${it.name}${it.cond?COND:''}</th><td>${mark(it.support)}</td><td>${mark(it.care)}</td></tr>`).join('')+
+    '<thead><tr><th scope="col">加算・減算<span class="tap">（名前を押すと説明）</span></th><th scope="col">要支援</th><th scope="col">要介護</th></tr></thead><tbody>'+
+    [...items.values()].map(it=>`<tr><th scope="row"><details><summary>${it.name}${it.cond?COND:''}</summary>`+
+      `<p class="m-amt">${amt(it)}</p><p class="m-note">${it.note||''}</p></details></th><td>${mark(it.support)}</td><td>${mark(it.care)}</td></tr>`).join('')+
     '</tbody>';
 }
 const treatmentRow=()=>FEES.treatment?.status==='confirmed'?row(FEES.treatment.name+FEES.treatment.rateLabel,`合計の${pct()}`,FEES.treatment.note):'';
@@ -168,6 +195,12 @@ function renderCalc(){
     tr(`費用の総額（1単位＝${FEES.unitPrice}円）`,yen(b.cost)+'円')+
     tr(`介護保険から支払われる分（${10-state.burden}割）`,'−'+yen(b.cost-b.self)+'円')+
     tr(`お支払いいただく分（${state.burden}割）`,yen(b.self)+'円','sum');
+  // 条件つきの加算・減算は目安に入れていないことを、どれが当てはまり得るかと一緒に書く
+  const kind=isSupport?'support':'care';
+  const cond=FEES[kind].addons.filter(a=>a.status==='conditional').map(a=>`${a.name}（${amountOf(a)}）`);
+  if(isSupport&&FEES.support.over12Months)cond.push(`12か月を超えた場合の減算（${state.level} −${FEES.support.over12Months[state.level]}単位）`);
+  document.getElementById('r-cond').innerHTML=cond.length
+    ?`<b>この目安に含めていないもの</b>（条件に当てはまる方だけにかかります）：${cond.join('、')}`:'';
 }
 
 function renderExtras(){

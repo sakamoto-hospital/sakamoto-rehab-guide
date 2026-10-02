@@ -128,10 +128,19 @@
 .fees .cond{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:11.5px;font-weight:700;color:var(--orange);background:#fde6ee;border:1px solid #f5b3c8;vertical-align:2px;white-space:nowrap}
 .fees .matrix{width:100%;max-width:760px;border-collapse:separate;border-spacing:0;margin-top:16px;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .fees .matrix th,.fees .matrix td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;font-size:15px;line-height:1.5}
-.fees .matrix thead th{background:var(--deep);color:#fff;font-size:14px}
-.fees .matrix thead th:not(:first-child),.fees .matrix td{text-align:center;width:4.8em}
+.fees .matrix thead th{background:var(--deep);color:#fff;font-size:14px;white-space:nowrap}
+.fees .matrix thead th:first-child{white-space:normal}
+.fees .matrix thead .tap{display:block;font-size:11px;font-weight:600;opacity:.8}
+/* ★要支援・要介護の列は折り返さない（スマホで見出しが2段になるため・2026-10-02） */
+.fees .matrix thead th:not(:first-child),.fees .matrix td{text-align:center;width:4.4em;white-space:nowrap;vertical-align:top}
 .fees .matrix tbody tr:last-child th,.fees .matrix tbody tr:last-child td{border-bottom:0}
 .fees .matrix tbody th{font-weight:700}
+.fees .matrix summary{cursor:pointer;list-style:none;padding-right:18px;position:relative}
+.fees .matrix summary::-webkit-details-marker{display:none}
+.fees .matrix summary::after{content:"";position:absolute;right:2px;top:.55em;width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .15s}
+.fees .matrix details[open] summary::after{transform:rotate(-135deg);top:.8em}
+.fees .matrix .m-amt{margin:8px 0 0;font-size:14px;font-weight:800;color:var(--ink)}
+.fees .matrix .m-note{margin:4px 0 2px;font-size:13.5px;font-weight:500;color:var(--muted);line-height:1.65}
 .fees .matrix .yes{color:var(--green);font-weight:800;font-size:18px}
 .fees .matrix .no{color:#a7b3c9}
-@media (max-width:420px){.fees .matrix th,.fees .matrix td{padding:9px 8px;font-size:14px}.fees .matrix thead th:not(:first-child),.fees .matrix td{width:3.6em}}
+@media (max-width:420px){.fees .matrix th,.fees .matrix td{padding:10px 7px;font-size:14px}.fees .matrix thead th{font-size:13px}.fees .matrix thead th:not(:first-child),.fees .matrix td{width:3.6em}}
