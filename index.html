@@ -221,6 +221,15 @@ section{padding:44px 0;scroll-margin-top:110px}
 .km b{display:block;font-size:29px;font-weight:800;line-height:1.25}
 .km span{font-size:13px;opacity:.85}
 
+/* ---------- 個別リハビリ＋自主トレーニング ---------- */
+.tr-photo{position:relative;margin:14px 0 0;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.tr-photo img{width:100%;height:auto;display:block}
+.tr-photo figcaption{position:absolute;right:8px;bottom:6px;font-size:12px;background:rgba(255,255,255,.85);padding:1px 8px;border-radius:6px;color:#334}
+.tr-icons{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 0;padding:0}
+.tr-icons li{background:#eef4fb;border:1px solid var(--line);border-radius:10px;text-align:center;padding:10px 4px;font-weight:800;color:#1534a8;font-size:14px;line-height:1.35;word-break:keep-all;overflow-wrap:anywhere}
+.course-note b{color:#14238a}
+.slot .start{margin:6px 0 0;font-size:13px;font-weight:700;color:#027c6c}
+@media (min-width:760px){.tr-icons{grid-template-columns:repeat(4,1fr)}}
 /* ---------- 初めての方へ（正面玄関・館内案内図） ---------- */
 .access-grid{display:grid;gap:18px;margin-top:14px}
 .access figure{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
@@ -316,7 +325,8 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <a href="fees.html">料金</a>
       <a href="#courses" data-now>クールの時間</a>
       <a href="#availability" data-later>空き状況</a>
-      <a href="#strength">当施設の強み</a>
+      <a href="#strength">タクト・リハの特徴</a>
+      <a href="#training">個別リハビリ＋自主トレ</a>
       <a href="#guide">ご利用の流れ</a>
       <a href="#transport">送迎・持ち物</a>
       <a href="#access">ご案内図</a>
@@ -333,8 +343,8 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <div class="hero-copy">
       <span class="open">2026.11.01 開設</span>
       <!-- ★チラシ（2026-10-02版）と同じキャッチコピー。スマホで変な位置で折り返さないよう、区切りごとに nb で包む -->
-      <h1><span class="nb">あなたの</span><span class="nb"><em>「したい」</em>を</span><br><span class="nb">現実に。</span></h1>
-      <p class="sub"><span class="nb">暮らしの<em class="dk">「できる」</em>へ</span><span class="nb">道をつなぐ。</span></p>
+      <h1><span class="nb">あなたの</span><span class="nb"><em>「したい」</em>を</span><br><span class="nb">現実に</span></h1>
+      <p class="sub"><span class="nb">暮らしの<em class="dk">「できる」</em>へ</span><span class="nb">道をつなぐ</span></p>
       <p class="name">短時間専門デイケア　タクト・リハさかもと<span class="nb">（阪本病院 介護医療院内）</span></p>
       <div class="hero-actions">
         <a class="btn" href="fees.html" data-now>料金を見る</a>
@@ -376,7 +386,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <div class="kicker">SCHEDULE</div>
     <h2 class="h2">クールの時間</h2>
     <div class="slots" id="course-list"></div>
-    <p class="course-note">1クール 定員8名（11月1日時点）<br>※1クール目・2クール目は11月1日スタート</p>
+    <p class="course-note"><b>定員</b>　1クール定員8名からスタート<br>ご利用ニーズに応じて受入枠を順次拡大予定<br>※③・④クールは、受入体制を整え、順次開設を予定しています。</p>
   </div>
 </section>
 
@@ -399,11 +409,11 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <div class="kicker">WHO CAN USE</div>
     <h2 class="h2">こんな方に<br>ご利用いただけます。</h2>
     <ul class="checks">
-      <li><span>ご自身で歩ける方<small>歩行器・屋内歩行の方もOK</small></span></li>
+      <li><span>ご自身で屋内を移動できる方<small>歩行器・車椅子などの使用も可（介助不要）</small></span></li>
       <li><span>排泄が自立している方</span></li>
-      <li><span>介護保険の認定をお持ちの方<small>要支援1・2、要介護1〜5の方</small></span></li>
+      <li><span>要支援・要介護の認定を受けている方<small>要支援1・2、要介護1〜5の方</small></span></li>
     </ul>
-    <p class="note prose" style="margin-top:14px">介護度が高くても、移動が自立していればご相談ください。移動に介助が必要な方・車いすでの送迎が必要な方は、これまでどおり通常の通所リハビリテーションをご案内します。</p>
+    <p class="note prose" style="margin-top:14px">介護度が高くても、移動が自立していればご相談ください。移動に介助が必要な方は、これまでどおり通常の通所リハビリテーションをご案内します。</p>
   </div>
 </section>
 
@@ -412,7 +422,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <img src="assets/self-training.jpg" width="1200" height="900" loading="lazy" alt="理学療法士が利用者の腕を支えてストレッチを行う様子">
   <div class="strength-inner">
     <div class="wrap">
-      <div class="kicker">OUR STRENGTH</div>
+      <div class="kicker">タクト・リハの特徴</div>
       <h2>リハビリ専門職が、<br><span class="nb">一人ひとりに合わせた</span><span class="nb">リハビリを行います。</span></h2>
       <p class="lead prose">理学療法士・作業療法士が、どこに問題があるのかを見極めて、そこに対して治療する。ここがいちばんの強みです。</p>
       <ul class="steps3">
@@ -420,8 +430,22 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
         <li><b>原因を絞る</b><span>なぜ動きにくいのかを明らかにします。</span></li>
         <li><b>治療する</b><span>医師の指示のもと、個別にリハビリ。</span></li>
       </ul>
-      <p class="nope prose"><b>食事・入浴はありません。</b>リハビリテーションに特化した短時間の通所リハビリテーションです。</p>
+      <p class="nope prose"><b>食事・入浴はありません。</b>リハビリテーションに特化した短時間型のデイケア・リハビリテーションです。</p>
     </div>
+  </div>
+</section>
+
+<!-- ===================== 個別リハビリ＋自主トレーニング ===================== -->
+<!-- ★チラシ2ページ目と同じ写真・文言（2026-10-03）。写真は Codex で作ったイメージ -->
+<section class="training" id="training">
+  <div class="wrap">
+    <div class="kicker">TRAINING</div>
+    <h2 class="h2">個別リハビリ＋自主トレーニング</h2>
+    <p class="lead prose" style="margin-top:0">専門職がお身体の状態に合わせて、運動内容や負荷をご提案します。</p>
+    <figure class="tr-photo"><img src="assets/training.jpg" width="1700" height="850" loading="lazy" alt="自転車・歩行・上半身・脚の機器で運動する利用者とスタッフ（イメージ）"><figcaption>※イメージです</figcaption></figure>
+    <ul class="tr-icons">
+      <li>自転車運動</li><li>歩行練習</li><li>上半身の運動</li><li>脚の筋力トレーニング</li>
+    </ul>
   </div>
 </section>
 
@@ -431,10 +455,10 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <div class="kicker">YOUR VISIT</div>
     <h2 class="h2">ご利用の流れ<small>（1クール 90分の一例）</small></h2>
     <ol>
-      <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5l1.8-4.6A2 2 0 0 1 6.7 7.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6v3.4a1 1 0 0 1-1 1h-1.3M3 13.5v3.4a1 1 0 0 0 1 1h1.3M3 13.5h18M9.7 17.9h4.6"/><circle cx="7.5" cy="17.9" r="1.8"/><circle cx="16.5" cy="17.9" r="1.8"/></svg></span><div><b>お迎え</b><em>事業所を出発し、順次お迎えにうかがいます。</em></div></li>
-      <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/><path d="M7.2 12.4h2.6l1.4-2.4 2 4.2 1.4-1.8h2.2"/></svg></span><div><b>到着・健康チェック</b><em>血圧を測り、顔色や体調の変化を確認します。</em></div></li>
-      <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="4.8" r="1.9"/><path d="M9 7.4v6.2M9 13.6l-2.6 6.4M9 13.6l2.8 6.4M5.2 10.4L9 9l3.2 1.6"/><path d="M15.5 8.5h4M17.5 6.5v4" stroke="#ee641e"/></svg></span><div><b>個別リハビリ</b><em>理学療法士・作業療法士による一人ひとりに合ったリハビリを行います。</em></div></li>
-      <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="16.5" r="3.3"/><circle cx="18" cy="16.5" r="3.3"/><path d="M6 16.5l4-7h5.2l2.8 7M10 9.5l-1.4-3H6.8M15.2 9.5l-1-3h2.3M10 9.5l2.6 7h-6.6"/></svg></span><div><b>自主トレーニング</b><em>自転車エルゴメーターや上半身の機器を使い、ご自身のペースでトレーニングします。</em></div></li>
+      <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5l1.8-4.6A2 2 0 0 1 6.7 7.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6v3.4a1 1 0 0 1-1 1h-1.3M3 13.5v3.4a1 1 0 0 0 1 1h1.3M3 13.5h18M9.7 17.9h4.6"/><circle cx="7.5" cy="17.9" r="1.8"/><circle cx="16.5" cy="17.9" r="1.8"/></svg></span><div><b>お迎え</b><em>送迎をご利用の方を順次お迎えします。</em></div></li>
+      <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/><path d="M7.2 12.4h2.6l1.4-2.4 2 4.2 1.4-1.8h2.2"/></svg></span><div><b>到着・健康チェック</b><em>血圧や体調を確認します。</em></div></li>
+      <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="4.8" r="1.9"/><path d="M9 7.4v6.2M9 13.6l-2.6 6.4M9 13.6l2.8 6.4M5.2 10.4L9 9l3.2 1.6"/><path d="M15.5 8.5h4M17.5 6.5v4" stroke="#ee641e"/></svg></span><div><b>個別リハビリ</b><em>理学療法士・作業療法士による一人ひとりに合ったリハビリ。</em></div></li>
+      <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="16.5" r="3.3"/><circle cx="18" cy="16.5" r="3.3"/><path d="M6 16.5l4-7h5.2l2.8 7M10 9.5l-1.4-3H6.8M15.2 9.5l-1-3h2.3M10 9.5l2.6 7h-6.6"/></svg></span><div><b>自主トレーニング</b><em>お身体に合わせた運動をご自身のペースで。</em></div></li>
       <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11.2L12 4.5l8.5 6.7"/><path d="M5.8 9.5V19.5h12.4V9.5"/><path d="M10 19.5v-5h4v5"/></svg></span><div><b>お帰り</b><em>送迎をご利用の方はご自宅までお送りします。</em></div></li>
     </ol>
   </div>
@@ -479,8 +503,8 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
 <section class="access" id="access">
   <div class="wrap">
     <div class="kicker">ACCESS</div>
-    <h2 class="h2">初めての方へ ご案内</h2>
-    <p class="lead prose" style="margin-top:0">この正面玄関から入り、館内案内図のように進みます。</p>
+    <h2 class="h2">初めての方へのご案内</h2>
+    <p class="lead prose" style="margin-top:0">正面玄関からお入りください。</p>
     <div class="access-grid">
       <figure>
         <figcaption><span class="ac-no">1</span>正面玄関</figcaption>
@@ -509,7 +533,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <div>
         <p class="lead prose" style="margin-top:0">ご家族様への説明や、事業所内での回覧にそのままお使いいただけます。表紙を押すとダウンロードできます。</p>
         <a class="dl" href="assets/takt-reha-sakamoto-flyer.pdf" download="タクト・リハさかもと_チラシ.pdf">チラシをダウンロード</a>
-        <p class="note" style="margin-top:10px">PDF・A4 2ページ／約2.6MB</p>
+        <p class="note" style="margin-top:10px">PDF・A4 2ページ／約2.9MB</p>
       </div>
     </div>
   </div>
@@ -538,7 +562,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
 const TEL='0879-24-9030';
 
 /* ★クールの時間。status を 'open' にするとその枠の空き状況が表示され、
-   'planned' にすると下の「検討中」の1行にまとめられます。 */
+   'planned' にすると下の「今後開設予定」の1行にまとめられます。 */
 const COURSES=[
   {no:'①', time:'9:00〜10:30',  ride:false, status:'open'},
   {no:'②', time:'10:40〜12:10', ride:true,  status:'open'},
@@ -567,9 +591,9 @@ function renderCourses(){
   el.innerHTML=COURSES.filter(c=>c.status==='open').map(c=>
     `<article class="slot"><div class="slot-head"><span class="slot-no">${c.no}クール</span><span class="slot-time">${c.time}</span></div>`+
     (c.ride?`<div class="ride yes">${BUS}<span>送迎あり</span></div>`:`<div class="ride no">${BUS}<span>送迎なし（直接お越しください）</span></div>`)+
-    '</article>').join('');
+    '<p class="start">11月スタート予定</p></article>').join('');
   const later=COURSES.filter(c=>c.status==='planned');
-  if(later.length)el.insertAdjacentHTML('beforeend',`<p class="later">午後（${later.map(c=>c.no+'クール '+c.time).join('／')}）は検討中です。</p>`);
+  if(later.length)el.insertAdjacentHTML('beforeend',`<p class="later">午後（${later.map(c=>c.no+'クール '+c.time).join('／')}）は今後開設予定です。開始時期は順次ご案内します。</p>`);
 }
 
 function stamp(iso){
@@ -620,7 +644,7 @@ function render(data){
   if(later.length){
     const p=document.createElement('p');
     p.className='later';
-    p.textContent='午後（'+later.map(c=>c.no+'クール '+c.time).join('／')+'）は検討中です。';
+    p.textContent='午後（'+later.map(c=>c.no+'クール '+c.time).join('／')+'）は今後開設予定です。開始時期は順次ご案内します。';
     slotsEl.appendChild(p);
   }
 
