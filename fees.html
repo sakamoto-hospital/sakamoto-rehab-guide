@@ -123,7 +123,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kicker">FEES</div>
     <h1>料金のご案内</h1>
-    <p class="lead prose">介護保険が使えます。お支払いいただくのは、かかった費用のうち<b>1割〜3割</b>（お手元の「介護保険負担割合証」のとおり）です。</p>
+    <p class="lead prose">介護保険が使えます。お支払いは<b>1割〜3割</b>です（介護保険負担割合証のとおり）。</p>
     <div class="unitbox" id="unitbox"></div>
     <nav class="jump" aria-label="このページの中">
       <a href="#care">要介護1〜5の方</a>
@@ -142,12 +142,13 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kind care">要介護1〜5の方<span>通所リハビリテーション</span></div>
     <h2 class="h2">1回ごとの料金です</h2>
-    <p class="lead prose">通った回数分かかります。<b>送迎を使うかどうか</b>で金額が変わります。①クールは送迎なし、②クールは送迎あり・なしのどちらもあります（②クールでも、ご自分で来られる方は「送迎なし」の金額です）。</p>
+    <p class="lead prose">通った回数分かかります。<b>②クールでも、ご自分で来られる方は「送迎なし」</b>の金額です。</p>
     <span class="seg-label">負担割合</span>
     <div class="seg" data-burden-seg></div>
     <div class="pair">
       <div>
         <table class="table" id="care-table"></table>
+        <div id="care-plus"></div>
         <p class="caption" id="care-caption"></p>
       </div>
       <div>
@@ -165,7 +166,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kind support">要支援1・2の方<span>介護予防通所リハビリテーション</span></div>
     <h2 class="h2">ひと月の定額です</h2>
-    <p class="lead prose">通う回数にかかわらず、<b>ひと月ごとに同じ金額</b>です。送迎の有無でも変わりません。</p>
+    <p class="lead prose">何回通っても、<b>ひと月ごとに同じ金額</b>です。</p>
     <span class="seg-label">負担割合</span>
     <div class="seg" data-burden-seg></div>
     <div class="pair">
@@ -189,7 +190,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kicker">ADD-ONS</div>
     <h2 class="h2">加算の一覧（要支援・要介護のちがい）</h2>
-    <p class="lead prose">○のついている方にかかります。<span class="cond">条件あり</span>は、条件に当てはまる方だけにかかるもので、上の料金の目安には含めていません。</p>
+    <p class="lead prose">○の方にかかります。<span class="cond">条件あり</span>は、当てはまる方だけです。</p>
     <table class="matrix" id="addon-matrix"></table>
   </div>
 </section>
@@ -199,7 +200,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kicker">SIMULATION</div>
     <h2 class="h2">ひと月の目安を計算する</h2>
-    <p class="lead prose">介護度・負担割合・クール・回数を選ぶと、ひと月にお支払いいただく金額の目安が出ます。</p>
+    <p class="lead prose">選ぶと、ひと月の目安が出ます。</p>
     <div class="calc">
       <div class="fields">
         <div class="field"><label for="c-level">介護度</label><select id="c-level"></select></div>
@@ -212,7 +213,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
         <p class="v" id="r-value">—</p>
         <p class="s" id="r-sub"></p>
       </div>
-      <p class="caption">ほかの介護サービスと合わせて、介護度ごとのひと月の上限（区分支給限度基準額）を超えた分は、全額ご負担になります。ご利用の回数は、担当のケアマネジャーと相談して決まります。</p>
+      <p class="caption">ご利用の回数は、担当のケアマネジャーと相談して決まります。</p>
       <details class="breakdown">
         <summary>計算の内訳を見る</summary>
         <table class="bd" id="r-bd"></table>

@@ -144,3 +144,10 @@
 .fees .matrix .yes{color:var(--green);font-weight:800;font-size:18px}
 .fees .matrix .no{color:#a7b3c9}
 @media (max-width:420px){.fees .matrix th,.fees .matrix td{padding:10px 7px;font-size:14px}.fees .matrix thead th{font-size:13px}.fees .matrix thead th:not(:first-child),.fees .matrix td{width:3.6em}}
+
+/* ★2026-10-06 ひと月に1回の加算（要介護）を表の下に。見やすさ優先で大きめに */
+.fees .plus{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:10px;padding:10px 14px;background:#fff7e8;border:1px solid #f0d9a8;border-radius:10px;font-size:15px;line-height:1.5}
+.fees .plus span:first-child{font-weight:800;color:#b15a00}
+.fees .plus b{font-weight:800}
+.fees .plus .yen{margin-left:auto;font-size:20px}
+.fees .table .yen{font-size:23px}

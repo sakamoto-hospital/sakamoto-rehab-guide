@@ -47,38 +47,26 @@ function renderCare(){
   let h='<thead><tr><th scope="col" style="text-align:left;padding-left:14px">介護度</th>'+
     cs.map(c=>`<th scope="col"><b>${c.no}クール</b><span class="ride-tag ${c.ride?'yes':'no'}">${c.ride?'送迎あり':'送迎なし'}</span></th>`).join('')+'</tr></thead><tbody>';
   for(const level of Object.keys(FEES.care.units)){
-    h+=`<tr><th scope="row">${level}</th>`+cs.map(c=>{
-      const u=careVisitUnits(level,c.ride), b=bill(u);
-      // 何が足されているかを全部出す（「＋処遇改善」だけだと中身が分からない・2026-10-02 本人指示）
-      const parts=[`基本${FEES.care.units[level]}`,...addons('care','visit').map(a=>`${a.short||a.name}${a.units}`)];
-      const minus=c.ride?'':`−送迎なし${noRideUnits()}`;
-      return `<td><span class="yen">${yen(b.self)}<small>円</small></span><span class="unit">`+
-        `<span class="nw">${parts.join('＋')}${minus}</span>`+
-        `<span class="nw">＝${yen(u)}＋処遇改善${b.t}</span><span class="nw">＝<b>${yen(b.total)}単位</b></span></span></td>`;
-    }).join('')+'</tr>';
+    // ★2026-10-06 本人「高齢者には文字が多すぎる」→ 表は金額だけ。単位の式は下の「料金の内訳」へ
+    h+=`<tr><th scope="row">${level}</th>`+cs.map(c=>`<td><span class="yen">${yen(bill(careVisitUnits(level,c.ride)).self)}<small>円</small></span></td>`).join('')+'</tr>';
   }
   document.getElementById('care-table').innerHTML=h+'</tbody>';
+  // ★ひと月に1回かかる加算（科学的介護推進体制加算）を、表のすぐ下に金額で出す（2026-10-06 本人「要介護に入っていない」）
   const m=addons('care','month');
+  document.getElementById('care-plus').innerHTML=m.map(a=>
+    `<p class="plus"><span>＋ ひと月に1回</span><b>${a.name}</b><span class="yen">${yen(bill(a.units).self)}<small>円</small></span></p>`).join('');
   document.getElementById('care-caption').innerHTML=
-    `${state.burden}割負担の場合の、1回あたりの目安です（${addons('care','visit').map(a=>a.name).join('・')}${addons('care','visit').length?'・':''}処遇改善加算を含みます。「条件あり」の加算は含みません）。`+
-    `②クールでも、ご自分で来られる方は送迎なしの金額です。送迎なしは、送迎の分（片道${FEES.care.noRide.units}単位×往復）安くなります。`+
-    (m.length?`<br><b>このほか、ひと月に1回 ${m.map(a=>`${a.name}（${a.units}単位）`).join('・')} が加わります。</b>ひと月の合計は「<a href="#calc">ひと月の目安を計算する</a>」でご確認ください。`:'')+
-    `<br>処遇改善加算は、本来はひと月の合計に${pct()}を掛けて計算します。この表は1回分で計算した目安のため、実際のご請求とは数円ずれることがあります。`;
+    `${state.burden}割負担・1回あたりの目安です（${addons('care','visit').map(a=>a.short||a.name).join('・')}加算・処遇改善加算をふくみます）。`;
 }
 
 function renderSupport(){
   let h='<thead><tr><th scope="col" style="text-align:left;padding-left:14px">介護度</th><th scope="col"><b>ひと月</b>何回通っても同じ</th></tr></thead><tbody>';
   for(const level of Object.keys(FEES.support.units)){
-    const u=supportMonthUnits(level), b=bill(u);
-    const parts=[`基本${yen(FEES.support.units[level])}`,...addons('support','month').map(a=>`${a.short||a.name}${addonUnits(a,level)}`)];
-    h+=`<tr><th scope="row">${level}</th><td><span class="yen">${yen(b.self)}<small>円</small></span><span class="unit">`+
-      `<span class="nw">${parts.join('＋')}</span><span class="nw">＝${yen(u)}＋処遇改善${b.t}</span><span class="nw">＝<b>${yen(b.total)}単位</b></span></span></td></tr>`;
+    h+=`<tr><th scope="row">${level}</th><td><span class="yen">${yen(bill(supportMonthUnits(level)).self)}<small>円</small></span></td></tr>`;
   }
   document.getElementById('support-table').innerHTML=h+'</tbody>';
-  const o=FEES.support.over12Months;
   document.getElementById('support-caption').innerHTML=
-    `${state.burden}割負担の場合の、ひと月の目安です（${addons('support','month').map(a=>a.name).join('・')}・処遇改善加算を含みます。「条件あり」の加算は含みません）。`+
-    (o?`<br>ご利用の開始から12か月を超えると、国の決まりにより、ひと月に${Object.entries(o).map(([k,v])=>`${k}は${v}単位`).join('、')}が差し引かれることがあります（リハビリの会議や国への情報提出などの条件を満たしている場合は差し引かれません）。`:'');
+    `${state.burden}割負担・ひと月の目安です（${addons('support','month').map(a=>a.name).join('・')}・処遇改善加算をふくみます）。`;
 }
 
 /* 単位の内訳。注記は狭い列に詰めず、行の下に全幅で出す（スマホで読みやすくするため） */
@@ -220,16 +208,11 @@ function renderDocs(){
 
 function renderStatic(){
   const u=FEES.unitPrice, ex=FEES.care.units['要介護1'];
-  document.getElementById('unitbox').innerHTML=
-    `<p class="u-big">1単位 ＝ ${u}円</p>`+
-    `<p class="u-sub">介護保険の料金は「単位」で決まっています。当事業所は${FEES.unitPriceNote}のため、<b>1単位＝${u}円</b>です。<br>`+
-    `たとえば ${ex}単位 は ${yen(ex*u)}円。1割負担の方は、そのうち ${yen(ex*u/10)}円 をお支払いいただきます（処遇改善加算などは別に加わります）。</p>`;
+  document.getElementById('unitbox').innerHTML=`<p class="u-big">1単位 ＝ ${u}円</p>`;
   document.getElementById('cautions').innerHTML=[
-    `金額は${FEES.basis}にもとづく<b>目安</b>です（${FEES.asOf}）。実際のご請求は月ごとの合計で計算するため、数円ずれることがあります。`,
-    '負担割合（1割・2割・3割）は、お手元の「介護保険負担割合証」でご確認ください。',
-    '区分支給限度基準額を超えた分や、介護保険の対象にならない費用は、全額のご負担になります。',
-    '高額介護サービス費などの制度に当てはまる方は、お支払いが軽くなることがあります。担当のケアマネジャーにご相談ください。',
-    '料金は、国の介護報酬の改定や事業所の体制の変更により変わることがあります。変わるときは、事前に書面でお知らせします。'
+    `金額は<b>目安</b>です（${FEES.asOf}）。実際のご請求は、ひと月の合計で計算します。`,
+    'ひと月の上限（区分支給限度基準額）を超えた分は、全額ご負担になります。',
+    '料金が変わるときは、事前に書面でお知らせします。'
   ].map(t=>`<li>${t}</li>`).join('');
 }
 
