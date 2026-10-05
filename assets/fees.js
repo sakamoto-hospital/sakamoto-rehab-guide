@@ -61,7 +61,7 @@ function renderCare(){
   const m=addons('care','month');
   document.getElementById('care-caption').innerHTML=
     `${state.burden}割負担の場合の、1回あたりの目安です（${addons('care','visit').map(a=>a.name).join('・')}${addons('care','visit').length?'・':''}処遇改善加算を含みます。「条件あり」の加算は含みません）。`+
-    `送迎のないクールは、送迎の分（片道${FEES.care.noRide.units}単位×往復）安くなります。`+
+    `②クールでも、ご自分で来られる方は送迎なしの金額です。送迎なしは、送迎の分（片道${FEES.care.noRide.units}単位×往復）安くなります。`+
     (m.length?`<br><b>このほか、ひと月に1回 ${m.map(a=>`${a.name}（${a.units}単位）`).join('・')} が加わります。</b>ひと月の合計は「<a href="#calc">ひと月の目安を計算する</a>」でご確認ください。`:'')+
     `<br>処遇改善加算は、本来はひと月の合計に${pct()}を掛けて計算します。この表は1回分で計算した目安のため、実際のご請求とは数円ずれることがあります。`;
 }
@@ -118,7 +118,7 @@ function renderMatrix(){
     put(t.name+t.rateLabel,'care',false,t.note,amt);put(t.name+t.rateLabel,'support',false,t.note,amt);
   }
   put('送迎を行わない場合の減算','care',true,
-    `送迎のない${FEES.courses.filter(x=>!x.ride).map(x=>x.no).join('・')}クールをご利用の場合に、国の決まりで行き・帰りそれぞれ差し引かれます。要支援の方は対象外です。`,
+    `送迎を使わない場合（①クール、または②クールでご自分で来られる場合）に、国の決まりで行き・帰りそれぞれ差し引かれます。要支援の方は対象外です。`,
     `−${FEES.care.noRide.units}単位／片道（往復で−${noRideUnits()}単位）`);
   if(FEES.support.over12Months)put('ご利用開始から12か月を超えた場合の減算','support',true,
     'リハビリの会議の開催や国（LIFE）への情報提出などの条件を満たしている場合は、差し引かれません。',
@@ -142,7 +142,7 @@ function renderUnits(){
   const c=FEES.care, s=FEES.support;
   document.getElementById('care-units').innerHTML='<tbody>'+
     grp(c.label)+Object.entries(c.units).map(([k,v])=>row(k,`${v}単位／1回`)).join('')+
-    grp('送迎')+row('送迎を行わない場合',`−${c.noRide.units}単位／片道`,`送迎のない${FEES.courses.filter(x=>!x.ride).map(x=>x.no).join('・')}クールをご利用の場合、国の決まりにより行き・帰りそれぞれ差し引かれます。`)+
+    grp('送迎')+row('送迎を行わない場合',`−${c.noRide.units}単位／片道`,`送迎を使わない場合（①クール、または②クールでご自分で来られる場合）、国の決まりにより行き・帰りそれぞれ差し引かれます。`)+
     grp('加算')+addonRows('care')+treatmentRow()+'</tbody>';
   document.getElementById('support-units').innerHTML='<tbody>'+
     grp(s.label)+Object.entries(s.units).map(([k,v])=>row(k,`${yen(v)}単位／1か月`)).join('')+
