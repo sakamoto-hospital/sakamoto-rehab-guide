@@ -102,13 +102,25 @@
       }
     ]
   },
+  "times": [
+    {
+      "time": "9:00〜10:30",
+      "ride": false
+    },
+    {
+      "time": "10:40〜12:10",
+      "ride": true
+    }
+  ],
   "courses": [
     {
-      "no": "②",
+      "label": "<span class=\"nw\">10:40〜12:10</span>",
+      "short": "10:40〜12:10",
       "ride": true
     },
     {
-      "no": "①・②",
+      "label": "<span class=\"nw\">9:00〜10:30</span><br>または<br><span class=\"nw\">10:40〜12:10</span>",
+      "short": "9:00〜10:30 か 10:40〜12:10",
       "ride": false
     }
   ],
@@ -135,9 +147,14 @@
   ],
   "documents": [
     {
-      "title": "契約書・重要事項説明書",
-      "pdf": "assets/docs/takt-reha-sakamoto-keiyakusho.pdf",
-      "qr": "assets/docs/qr-keiyakusho.png"
+      "title": "重要事項説明書",
+      "pdf": "assets/docs/takt-reha-sakamoto-juuyoujikou.pdf",
+      "qr": "assets/docs/qr-juuyoujikou.png"
+    },
+    {
+      "title": "運営規程",
+      "pdf": "assets/docs/takt-reha-sakamoto-unei-kitei.pdf",
+      "qr": "assets/docs/qr-unei-kitei.png"
     }
   ]
 }

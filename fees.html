@@ -18,7 +18,8 @@
      - 加算を足す …… fees.json の care.addons（要介護）／support.addons（要支援）に
                       1行足して status を "confirmed" に（要介護と要支援は別々に書く）
      - 実費を載せる … fees.json の extras に {"name","price","per","note"} を足す
-     - 契約書など …… PDF を assets/docs/ に置き、documents の pdf と qr にパスを入れる
+     - 重要事項説明書 … PDF を assets/docs/ に置き、documents の pdf と qr にパスを入れる
+                      （★2026-10-06 契約書は載せない。重説だけ。病院の公式サイトも重説・運営規程だけ）
                       （QR は tools/build/make-qr.mjs で作る）
    ★public です。法人名・利用者や職員の名前は載せない（電話番号 0879-24-9030 は 2026-10-02 本人の指示で掲載）
    =========================================================== */
@@ -105,7 +106,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <nav class="topnav">
       <a href="./#availability" data-later>空き状況</a>
       <a href="fees.html" aria-current="page">料金</a>
-      <a href="./#courses" data-now>クールの時間</a>
+      <a href="./#courses" data-now>ご利用の時間</a>
       <a href="./#strength">タクト・リハの特徴</a>
       <a href="./#training">個別リハビリ＋自主トレ</a>
       <a href="./#guide">ご利用の流れ</a>
@@ -130,7 +131,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <a href="#support">要支援1・2の方</a>
       <a href="#addons">加算の一覧</a>
       <a href="#calc">ひと月の目安を計算</a>
-      <a href="#documents">契約書など</a>
+      <a href="#documents">重要事項説明書・運営規程</a>
     </nav>
   </div>
 </div>
@@ -142,7 +143,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kind care">要介護1〜5の方<span>通所リハビリテーション</span></div>
     <h2 class="h2">1回ごとの料金です</h2>
-    <p class="lead prose">通った回数分かかります。<b>②クールでも、ご自分で来られる方は「送迎なし」</b>の金額です。</p>
+    <p class="lead prose">通った回数分かかります。<b>10:40〜12:10でも、ご自分で来られる方は「送迎なし」</b>の金額です。</p>
     <span class="seg-label">負担割合</span>
     <div class="seg" data-burden-seg></div>
     <div class="pair">
@@ -205,7 +206,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <div class="fields">
         <div class="field"><label for="c-level">介護度</label><select id="c-level"></select></div>
         <div class="field"><span class="lab">負担割合</span><div class="seg" data-burden-seg></div></div>
-        <div class="field" id="f-course"><label for="c-course">クール</label><select id="c-course"></select></div>
+        <div class="field" id="f-course"><label for="c-course">ご利用の時間</label><select id="c-course"></select></div>
         <div class="field" id="f-visits"><label for="c-visits">ひと月の回数</label><select id="c-visits"></select></div>
       </div>
       <div class="result" aria-live="polite">
@@ -237,7 +238,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
 <section id="documents">
   <div class="wrap">
     <div class="kicker">DOCUMENTS</div>
-    <h2 class="h2">契約書・重要事項説明書</h2>
+    <h2 class="h2">重要事項説明書・運営規程</h2>
     <div class="docs" id="docs"></div>
   </div>
 </section>

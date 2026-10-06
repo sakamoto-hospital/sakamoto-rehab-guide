@@ -45,7 +45,7 @@ function renderSegs(){
 function renderCare(){
   const cs=FEES.courses;
   let h='<thead><tr><th scope="col" style="text-align:left;padding-left:14px">介護度</th>'+
-    cs.map(c=>`<th scope="col"><b>${c.no}クール</b><span class="ride-tag ${c.ride?'yes':'no'}">${c.ride?'送迎あり':'送迎なし'}</span></th>`).join('')+'</tr></thead><tbody>';
+    cs.map(c=>`<th scope="col"><b>${c.label}</b><span class="ride-tag ${c.ride?'yes':'no'}">${c.ride?'送迎あり':'送迎なし'}</span></th>`).join('')+'</tr></thead><tbody>';
   for(const level of Object.keys(FEES.care.units)){
     // ★2026-10-06 本人「高齢者には文字が多すぎる」→ 表は金額だけ。単位の式は下の「料金の内訳」へ
     h+=`<tr><th scope="row">${level}</th>`+cs.map(c=>`<td><span class="yen">${yen(bill(careVisitUnits(level,c.ride)).self)}<small>円</small></span></td>`).join('')+'</tr>';
@@ -106,7 +106,7 @@ function renderMatrix(){
     put(t.name+t.rateLabel,'care',false,t.note,amt);put(t.name+t.rateLabel,'support',false,t.note,amt);
   }
   put('送迎を行わない場合の減算','care',true,
-    `送迎を使わない場合（①クール、または②クールでご自分で来られる場合）に、国の決まりで行き・帰りそれぞれ差し引かれます。要支援の方は対象外です。`,
+    `送迎を使わない場合（9:00〜10:30の方、または10:40〜12:10でご自分で来られる方）に、国の決まりで行き・帰りそれぞれ差し引かれます。要支援の方は対象外です。`,
     `−${FEES.care.noRide.units}単位／片道（往復で−${noRideUnits()}単位）`);
   if(FEES.support.over12Months)put('ご利用開始から12か月を超えた場合の減算','support',true,
     'リハビリの会議の開催や国（LIFE）への情報提出などの条件を満たしている場合は、差し引かれません。',
@@ -126,14 +126,16 @@ function renderMatrix(){
 }
 const treatmentRow=()=>FEES.treatment?.status==='confirmed'?row(FEES.treatment.name+FEES.treatment.rateLabel,`合計の${pct()}`,FEES.treatment.note):'';
 
+// ★2026-10-06 本人「1単位＝10円は上に出さず、内訳を開いたときに分かればいい」
+const unitRow=()=>`<tr class="grp"><th colspan="2">1単位＝${FEES.unitPrice}円で計算しています</th></tr>`;
 function renderUnits(){
   const c=FEES.care, s=FEES.support;
   document.getElementById('care-units').innerHTML='<tbody>'+
-    grp(c.label)+Object.entries(c.units).map(([k,v])=>row(k,`${v}単位／1回`)).join('')+
-    grp('送迎')+row('送迎を行わない場合',`−${c.noRide.units}単位／片道`,`送迎を使わない場合（①クール、または②クールでご自分で来られる場合）、国の決まりにより行き・帰りそれぞれ差し引かれます。`)+
+    unitRow()+grp(c.label)+Object.entries(c.units).map(([k,v])=>row(k,`${v}単位／1回`)).join('')+
+    grp('送迎')+row('送迎を行わない場合',`−${c.noRide.units}単位／片道`,`送迎を使わない場合（9:00〜10:30の方、または10:40〜12:10でご自分で来られる方）、国の決まりにより行き・帰りそれぞれ差し引かれます。`)+
     grp('加算')+addonRows('care')+treatmentRow()+'</tbody>';
   document.getElementById('support-units').innerHTML='<tbody>'+
-    grp(s.label)+Object.entries(s.units).map(([k,v])=>row(k,`${yen(v)}単位／1か月`)).join('')+
+    unitRow()+grp(s.label)+Object.entries(s.units).map(([k,v])=>row(k,`${yen(v)}単位／1か月`)).join('')+
     (s.over12Months?row('ご利用開始から12か月を超えた場合',Object.entries(s.over12Months).map(([k,v])=>`<span class="nw">${k} −${v}単位</span>`).join('<br>'),'条件を満たしている場合は差し引かれません。'):'')+
     grp('加算')+addonRows('support')+treatmentRow()+'</tbody>';
 }
@@ -145,7 +147,7 @@ function renderCalc(){
       const g=document.createElement('optgroup');g.label=label;
       Object.keys(units).forEach(l=>g.appendChild(new Option(l,l)));lv.appendChild(g);
     });
-    FEES.courses.forEach((c,i)=>co.add(new Option(`${c.no}クール（${c.ride?'送迎あり':'送迎なし'}）`,i)));
+    FEES.courses.forEach((c,i)=>co.add(new Option(`${c.short}（${c.ride?'送迎あり':'送迎なし'}）`,i)));
     // 月〜土の営業なので、多い月で27回（31日で日曜が4回の月）。回数そのものに国の上限はない
     const hint={4:'（週1回の目安）',8:'（週2回の目安）',13:'（週3回の目安）'};
     for(let n=1;n<=27;n++)vi.add(new Option(n+'回'+(hint[n]||''),n));
@@ -174,7 +176,7 @@ function renderCalc(){
   document.getElementById('r-value').innerHTML=`約 ${yen(b.self)}<small>円</small>`;
   document.getElementById('r-sub').textContent=isSupport
     ?`${state.level}・${state.burden}割負担・ひと月（回数にかかわらず定額）`
-    :`${state.level}・${state.burden}割負担・${FEES.courses[state.course].no}クール・ひと月${state.visits}回`;
+    :`${state.level}・${state.burden}割負担・${FEES.courses[state.course].short}・ひと月${state.visits}回`;
   const tr=(a,v,c='')=>`<tr class="${c}"><td>${a}</td><td>${v}</td></tr>`;
   document.getElementById('r-bd').innerHTML=
     rows.map(([k,v])=>tr(k,(v<0?'−':'')+yen(Math.abs(v))+'単位')).join('')+
@@ -208,7 +210,8 @@ function renderDocs(){
 
 function renderStatic(){
   const u=FEES.unitPrice, ex=FEES.care.units['要介護1'];
-  document.getElementById('unitbox').innerHTML=`<p class="u-big">1単位 ＝ ${u}円</p>`;
+  // ★2026-10-06 上の箱は「1単位＝10円」ではなく、ご利用の時間（本人「ページを開いて時間が分からない」「クールという言葉はなし」）
+  document.getElementById('unitbox').innerHTML=`<p class="u-big">1回 1時間半（90分）</p><p class="u-times">${FEES.times.map(t=>`<span>${t.time}<small>${t.ride?'送迎あり':'送迎なし'}</small></span>`).join('')}</p><p class="u-note">どちらか1つの時間にお越しください</p>`;
   document.getElementById('cautions').innerHTML=[
     `金額は<b>目安</b>です（${FEES.asOf}）。実際のご請求は、ひと月の合計で計算します。`,
     'ひと月の上限（区分支給限度基準額）を超えた分は、全額ご負担になります。',

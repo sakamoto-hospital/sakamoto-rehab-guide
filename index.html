@@ -14,14 +14,14 @@
    タクト・リハさかもと｜ケアマネジャー向けページ
    ★★いまは「料金だけ」の期間（2026-09-27〜）。<html data-phase="fees-only">
      - 空き状況 ………………………………………………………… data-later（ページに残したまま隠す／メニューは灰色）
-     - クールの時間 …………………………………………… data-now（この期間だけ出す）
+     - ご利用の時間 …………………………………………… data-now（この期間だけ出す）
      - ★トップに料金は書かない。「料金」「料金を見る」は fees.html へ飛ぶ（2026-09-27 本人指示）
      - こんな方に・特徴・個別リハビリ＋自主トレ・ご利用の流れ・送迎と持ち物 …… どちらの期間も出す（2026-09-27 本人指示で戻した）
      - 2026年4月以降に空き状況などを出すとき …………… index.html と fees.html の data-phase を "full" にするだけ
        （空き状況の自動更新は tools/availability-sync.md の3手順がまだ。やらないと「最終更新 9/12」と出る）
    ★直すときによく触るところ
      - 電話番号 ……… 一番下の <script> の TEL
-     - クールの時間 … 同じく <script> の COURSES
+     - ご利用の時間 … 同じく <script> の COURSES（★2026-10-06「クール」という言葉は使わない）
      - 空き枠の数字 … assets/availability.json
                       （スプレッドシートから自動更新できます。tools/availability-sync.md）
      - 料金 ……………… assets/fees.json（トップの「料金の目安」と fees.html の両方に出ます）
@@ -325,7 +325,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <nav class="topnav">
       <!-- ★data-later は「料金だけ」の期間は灰色で押せない。data-now／data-full は期間ごとに片方だけ出る -->
       <a href="fees.html">料金</a>
-      <a href="#courses" data-now>クールの時間</a>
+      <a href="#courses" data-now>ご利用の時間</a>
       <a href="#availability" data-later>空き状況</a>
       <a href="#strength">タクト・リハの特徴</a>
       <a href="#training">個別リハビリ＋自主トレ</a>
@@ -381,14 +381,14 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   </div>
 </section>
 
-<!-- ===================== クールの時間（「料金だけ」の期間だけ。空き枠の数は出さない） ===================== -->
+<!-- ===================== ご利用の時間（「料金だけ」の期間だけ。空き枠の数は出さない） ===================== -->
 <!-- ★時間は下の <script> の COURSES から描いています。ここに直接書かない -->
 <section id="courses" data-now>
   <div class="wrap">
     <div class="kicker">SCHEDULE</div>
-    <h2 class="h2">クールの時間</h2>
+    <h2 class="h2">ご利用の時間</h2>
     <div class="slots" id="course-list"></div>
-    <p class="course-note"><b>定員</b>　1クール定員8名からスタート<br>ご利用ニーズに応じて受入枠を順次拡大予定<br>※③・④クールは、受入体制を整え、順次開設を予定しています。</p>
+    <p class="course-note"><b>定員</b>　各回 定員8名からスタート<br>ご利用ニーズに応じて受入枠を順次拡大予定<br>※午後の回は、受入体制を整え、順次開設を予定しています。</p>
   </div>
 </section>
 
@@ -397,7 +397,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kicker">AVAILABILITY</div>
     <h2 class="h2">空いている曜日</h2>
-    <p class="lead prose">1クール定員8名からスタート。空いている曜日を押すと、お問い合わせ欄にご希望が入ります。</p>
+    <p class="lead prose">各回 定員8名からスタート。空いている曜日を押すと、お問い合わせ欄にご希望が入ります。</p>
     <div class="slots" id="slots"></div>
     <p class="updated" data-last-updated></p>
     <p class="picked" id="picked"></p>
@@ -459,9 +459,9 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
 <section class="flow" id="guide">
   <div class="wrap">
     <div class="kicker">YOUR VISIT</div>
-    <h2 class="h2">ご利用の流れ<small>（1クール 90分の一例）</small></h2>
+    <h2 class="h2">ご利用の流れ<small>（1回 90分の一例）</small></h2>
     <ol>
-      <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5l1.8-4.6A2 2 0 0 1 6.7 7.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6v3.4a1 1 0 0 1-1 1h-1.3M3 13.5v3.4a1 1 0 0 0 1 1h1.3M3 13.5h18M9.7 17.9h4.6"/><circle cx="7.5" cy="17.9" r="1.8"/><circle cx="16.5" cy="17.9" r="1.8"/></svg></span><div><b>お迎え</b><em>送迎をご利用の方を順次お迎えします。</em></div></li>
+      <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5l1.8-4.6A2 2 0 0 1 6.7 7.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6v3.4a1 1 0 0 1-1 1h-1.3M3 13.5v3.4a1 1 0 0 0 1 1h1.3M3 13.5h18M9.7 17.9h4.6"/><circle cx="7.5" cy="17.9" r="1.8"/><circle cx="16.5" cy="17.9" r="1.8"/></svg></span><div><b>お迎え</b><em>送迎をご利用の方のご自宅へ、順番にお迎えに参ります。</em></div></li>
       <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/><path d="M7.2 12.4h2.6l1.4-2.4 2 4.2 1.4-1.8h2.2"/></svg></span><div><b>到着・健康チェック</b><em>血圧や体調を確認します。</em></div></li>
       <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="4.8" r="1.9"/><path d="M9 7.4v6.2M9 13.6l-2.6 6.4M9 13.6l2.8 6.4M5.2 10.4L9 9l3.2 1.6"/><path d="M15.5 8.5h4M17.5 6.5v4" stroke="#ee641e"/></svg></span><div><b>個別リハビリ</b><em>理学療法士・作業療法士による一人ひとりに合ったリハビリ。</em></div></li>
       <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="16.5" r="3.3"/><circle cx="18" cy="16.5" r="3.3"/><path d="M6 16.5l4-7h5.2l2.8 7M10 9.5l-1.4-3H6.8M15.2 9.5l-1-3h2.3M10 9.5l2.6 7h-6.6"/></svg></span><div><b>自主トレーニング</b><em>お身体に合わせた運動をご自身のペースで。</em></div></li>
@@ -567,13 +567,13 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
    空にすると「準備中です」と表示され、番号を入れると自動でタップ発信のボタンになります。 */
 const TEL='0879-24-9030';
 
-/* ★クールの時間。status を 'open' にするとその枠の空き状況が表示され、
+/* ★ご利用の時間（画面には label と time だけを出す。no はスプレッドシートの見出しと合わせる内部の印）。status を 'open' にするとその枠の空き状況が表示され、
    'planned' にすると下の「今後開設予定」の1行にまとめられます。 */
 const COURSES=[
-  {no:'①', time:'9:00〜10:30',  ride:false, status:'open'},
-  {no:'②', time:'10:40〜12:10', ride:true,  status:'open'},
-  {no:'③', time:'13:30〜15:00', ride:false, status:'planned'},
-  {no:'④', time:'15:10〜16:40', ride:false, status:'planned'}
+  {no:'①', label:'午前・1回目', time:'9:00〜10:30',  ride:false, status:'open'},
+  {no:'②', label:'午前・2回目', time:'10:40〜12:10', ride:true,  status:'open'},
+  {no:'③', label:'午後・1回目', time:'13:30〜15:00', ride:false, status:'planned'},
+  {no:'④', label:'午後・2回目', time:'15:10〜16:40', ride:false, status:'planned'}
 ];
 
 const DEFAULT_DAYS=['月','火','水','木','金','土'];
@@ -591,15 +591,15 @@ function renderTel(){
   area.innerHTML=`<p class="tel-label">阪本病院 介護医療院内</p><a class="tel-link" href="${href}">${TEL}</a><a class="tel-cta" href="${href}">タップして電話をかける</a>`;
 }
 
-/* 「料金だけ」の期間に出す、クールの時間（空き枠の数は出さない） */
+/* 「料金だけ」の期間に出す、ご利用の時間（空き枠の数は出さない） */
 function renderCourses(){
   const el=document.getElementById('course-list');
   el.innerHTML=COURSES.filter(c=>c.status==='open').map(c=>
-    `<article class="slot"><div class="slot-head"><span class="slot-no">${c.no}クール</span><span class="slot-time">${c.time}</span></div>`+
+    `<article class="slot"><div class="slot-head"><span class="slot-no">${c.label}</span><span class="slot-time">${c.time}</span></div>`+
     (c.ride?`<div class="ride yes">${BUS}<span>送迎あり</span></div>`:`<div class="ride no">${BUS}<span>送迎なし（直接お越しください）</span></div>`)+
     '<p class="start">11月スタート予定</p></article>').join('');
   const later=COURSES.filter(c=>c.status==='planned');
-  if(later.length)el.insertAdjacentHTML('beforeend',`<p class="later">午後（${later.map(c=>c.no+'クール '+c.time).join('／')}）は今後開設予定です。開始時期は順次ご案内します。</p>`);
+  if(later.length)el.insertAdjacentHTML('beforeend',`<p class="later">午後（${later.map(c=>c.time).join('／')}）は今後開設予定です。開始時期は順次ご案内します。</p>`);
 }
 
 function stamp(iso){
@@ -611,7 +611,7 @@ function stamp(iso){
 function choose(day,course,button){
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
   button.classList.add('selected');
-  pickedEl.textContent=`ご希望：${day}曜日　${course.no}クール ${course.time}　― お電話の際にお伝えください。`;
+  pickedEl.textContent=`ご希望：${day}曜日　${course.time}　― お電話の際にお伝えください。`;
   document.getElementById('contact').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -624,7 +624,7 @@ function render(data){
     const card=document.createElement('article');
     card.className='slot';
     card.innerHTML=
-      `<div class="slot-head"><span class="slot-no">${course.no}クール</span><span class="slot-time">${course.time}</span></div>`+
+      `<div class="slot-head"><span class="slot-no">${course.label}</span><span class="slot-time">${course.time}</span></div>`+
       (course.ride
         ? `<div class="ride yes">${BUS}<span>送迎あり</span></div>`
         : `<div class="ride no">${BUS}<span>送迎なし（直接お越しください）</span></div>`);
@@ -637,7 +637,7 @@ function render(data){
       const b=document.createElement('button');
       b.type='button';
       b.className='pill'+(open?'':' full');
-      b.setAttribute('aria-label',`${day}曜日 ${course.no}クール ${course.time} ${open?'空きあり。お問い合わせへ進む':'受付調整中'}`);
+      b.setAttribute('aria-label',`${day}曜日 ${course.time} ${open?'空きあり。お問い合わせへ進む':'受付調整中'}`);
       b.innerHTML=`<b>${day}</b><span>${open?`空きあり<br>${left}/${capacity}`:'受付<br>調整中'}</span>`;
       if(open)b.addEventListener('click',()=>choose(day,course,b));
       pills.appendChild(b);
@@ -650,7 +650,7 @@ function render(data){
   if(later.length){
     const p=document.createElement('p');
     p.className='later';
-    p.textContent='午後（'+later.map(c=>c.no+'クール '+c.time).join('／')+'）は今後開設予定です。開始時期は順次ご案内します。';
+    p.textContent='午後（'+later.map(c=>c.time).join('／')+'）は今後開設予定です。開始時期は順次ご案内します。';
     slotsEl.appendChild(p);
   }
 
@@ -672,7 +672,7 @@ renderTel();
 const totop=document.querySelector('.totop');
 addEventListener('scroll',()=>totop.classList.toggle('show',scrollY>innerHeight),{passive:true});
 if(document.documentElement.dataset.phase==='fees-only'){
-  // ★「料金だけ」の期間：空き状況は読みに行かない（クールの時間だけ出す）。メニューの準備中の項目は押せなくする
+  // ★「料金だけ」の期間：空き状況は読みに行かない（ご利用の時間だけ出す）。メニューの準備中の項目は押せなくする
   renderCourses();
   document.querySelectorAll('.topnav a[data-later]').forEach(a=>{
     a.setAttribute('aria-disabled','true');a.tabIndex=-1;
