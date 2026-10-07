@@ -212,7 +212,7 @@ function renderStatic(){
   const u=FEES.unitPrice, ex=FEES.care.units['要介護1'];
   document.getElementById('asof').textContent=FEES.asOf;
   // ★2026-10-06 上の箱は「1単位＝10円」ではなく、ご利用の時間（本人「ページを開いて時間が分からない」「クールという言葉はなし」）
-  document.getElementById('unitbox').innerHTML=`<p class="u-big">1回 1時間半（90分）</p><p class="u-times">${FEES.times.map(t=>`<span>${t.time}<small>${t.ride?'送迎あり':'送迎なし'}</small></span>`).join('')}</p><p class="u-note">どちらか1つの時間にお越しください</p>`;
+  document.getElementById('unitbox').innerHTML=`<p class="u-big">1回 90分</p>${FEES.times.map(t=>`<p class="u-times">${t.time}<small>${t.ride?'送迎あり':'送迎なし'}</small></p>`).join('')}`;
   document.getElementById('cautions').innerHTML=[
     `金額は<b>目安</b>です（${FEES.asOf}）。実際のご請求は、ひと月の合計で計算します。`,
     'ひと月の上限（区分支給限度基準額）を超えた分は、全額ご負担になります。',
