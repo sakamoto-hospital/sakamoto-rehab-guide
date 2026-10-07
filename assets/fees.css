@@ -14,7 +14,8 @@
 .fees .u-big{font-size:28px;font-weight:800;color:var(--deep);letter-spacing:-.01em;line-height:1.3}
 .fees .u-times{margin-top:6px;font-size:24px;font-weight:700;color:var(--ink);white-space:nowrap}
 .fees .u-times small{font-size:16px;font-weight:700;margin-left:10px;color:var(--deep)}
-.fees .u-note{margin-top:4px;font-size:15px;color:var(--ink)}
+.fees .u-note{margin-top:2px;font-size:14px;color:var(--muted)}
+.fees .u-head{font-size:16px;font-weight:700;color:var(--deep)}
 .fees .u-sub{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.75}
 .fees .jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .fees .jump a{text-decoration:none;font-size:14px;font-weight:700;color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 14px}

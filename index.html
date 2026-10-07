@@ -133,6 +133,7 @@ section{padding:44px 0;scroll-margin-top:110px}
 .slot-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
 .slot-no{font-size:14px;font-weight:700;color:var(--green)}
 .slot-time{font-size:23px;font-weight:800;letter-spacing:-.02em}
+.ride-note{font-size:13px;color:var(--muted,#5b6770);margin-top:4px}
 /* ★送迎の有無はいちばん見られるところ。帯ごと色を変えて一目で分かるようにする */
 .ride{width:100%;margin-top:10px;border-radius:9px;padding:9px 12px;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
 .ride.yes{background:#fde6ee;color:#c0124f;border:1px solid #f5b3c8}
@@ -596,7 +597,7 @@ function renderCourses(){
   const el=document.getElementById('course-list');
   el.innerHTML=COURSES.filter(c=>c.status==='open').map(c=>
     `<article class="slot"><div class="slot-head"><span class="slot-no">${c.label}</span><span class="slot-time">${c.time}</span></div>`+
-    (c.ride?`<div class="ride yes">${BUS}<span>送迎あり</span></div>`:`<div class="ride no">${BUS}<span>送迎なし（直接お越しください）</span></div>`)+
+    (c.ride?`<div class="ride yes">${BUS}<span>送迎あり</span></div><p class="ride-note">※送迎なしの方もご利用できます</p>`:`<div class="ride no">${BUS}<span>送迎なし（直接お越しください）</span></div>`)+
     '<p class="start">11月スタート予定</p></article>').join('');
   const later=COURSES.filter(c=>c.status==='planned');
   if(later.length)el.insertAdjacentHTML('beforeend',`<p class="later">午後（${later.map(c=>c.time).join('／')}）は今後開設予定です。開始時期は順次ご案内します。</p>`);
@@ -626,7 +627,7 @@ function render(data){
     card.innerHTML=
       `<div class="slot-head"><span class="slot-no">${course.label}</span><span class="slot-time">${course.time}</span></div>`+
       (course.ride
-        ? `<div class="ride yes">${BUS}<span>送迎あり</span></div>`
+        ? `<div class="ride yes">${BUS}<span>送迎あり</span></div><p class="ride-note">※送迎なしの方もご利用できます</p>`
         : `<div class="ride no">${BUS}<span>送迎なし（直接お越しください）</span></div>`);
 
     const pills=document.createElement('div');
