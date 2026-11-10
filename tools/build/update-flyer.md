@@ -40,3 +40,10 @@ node make-qr.mjs https://sakamoto-hospital.github.io/sakamoto-rehab-guide/fees.h
 
 ※ 2026-10-02 のタクト・リハさかもと版チラシは、レイアウトが変わったので `update-flyer.mjs` の ICONS の切り出し位置は合っていません。
 　 この版の PDF・表紙・絵は手作業で差し替えました。次にこのスクリプトを使うときは ICONS の位置を直してから使ってください。
+
+## ★2026-11-10 注意：update-flyer.mjs（pdfjs）で絵がくずれた
+
+Edge で作ったチラシPDFを pdfjs で描くと、写真が消えて背景がピンク一色になり、文字の裏が黒くなった。
+`icon-drink.png`・`icon-towel.png` も位置がずれて切り出せなかった。
+→ この回は PyMuPDF でページを 1600px 幅の JPEG（品質90）にして PDF と表紙を作った（3.5MB → 1.4MB）。
+持ち物の絵はチラシ側で変わっていないので、前のものをそのまま使った。**作り直したら必ず表紙と2ページ目を目で見ること。**
