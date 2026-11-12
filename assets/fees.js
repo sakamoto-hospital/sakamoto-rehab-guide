@@ -204,13 +204,15 @@ function renderExtras(){
 
 function renderDocs(){
   document.getElementById('docs').innerHTML=FEES.documents.map(d=>d.pdf
-    ?`<div class="doc">${d.qr?`<img src="${d.qr}" width="480" height="480" alt="${d.title}のQRコード">`:''}<div><b>${d.title}</b><span class="st">PDF・QRを読み取るとスマートフォンでも開けます</span><a class="dl" href="${d.pdf}" download>ダウンロード</a></div></div>`
+    ?`<div class="doc">${d.qr?`<img src="${d.qr}" width="480" height="480" alt="${d.title}のQRコード">`:''}<div><b>${d.title}</b>${d.title==='重要事項説明書'&&FEES.officeNumber?`<span class="no">事業所番号は ${FEES.officeNumber} です</span>`:''}<span class="st">PDF・QRを読み取るとスマートフォンでも開けます</span><a class="dl" href="${d.pdf}" download>ダウンロード</a></div></div>`
     :`<div class="doc"><div><b>${d.title}</b><span class="st">準備中です。できあがりしだい、ここからダウンロードできるようにします。</span></div></div>`).join('');
 }
 
 function renderStatic(){
   const u=FEES.unitPrice, ex=FEES.care.units['要介護1'];
   document.getElementById('asof').textContent=FEES.asOf;
+  // ★2026-11-12 本人指示：料金ページのいちばん上に事業所番号（数字は fees.json の officeNumber）
+  const on=document.getElementById('officeno'); if(on&&FEES.officeNumber) on.innerHTML=`介護保険 事業所番号<b>${FEES.officeNumber}</b>`;
   // ★2026-10-06 上の箱は「1単位＝10円」ではなく、ご利用の時間（本人「ページを開いて時間が分からない」「クールという言葉はなし」）
   document.getElementById('unitbox').innerHTML=`<p class="u-head">ご利用の時間</p>${FEES.times.map(t=>`<p class="u-times">${t.time}<small>${t.ride?'送迎あり':'送迎なし'}</small></p>`+(t.ride?'<p class="u-note">※送迎なしの方もご利用できます</p>':'')).join('')}`;
   document.getElementById('cautions').innerHTML=[
