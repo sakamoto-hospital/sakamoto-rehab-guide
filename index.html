@@ -109,7 +109,7 @@ section{padding:44px 0;scroll-margin-top:110px}
 .hero em.dk{color:var(--green)}
 .hero .name{margin-top:8px;font-size:clamp(14px,1.6vw,18px);font-weight:700;color:var(--ink);text-shadow:0 1px 5px rgba(244,249,254,.9)}
 /* ★2026-11-12 本人指示：トップにも介護保険の事業所番号（数字は fees.json の officeNumber） */
-.hero .officeno{display:inline-block;margin-top:12px;padding:5px 14px;border:1.5px solid var(--ink);border-radius:8px;background:rgba(255,255,255,.88);color:var(--ink);font-size:clamp(14px,1.5vw,16px);font-weight:700;letter-spacing:.04em}
+.hero .officeno{display:inline-block;margin-top:18px;padding:5px 14px;border:1.5px solid var(--ink);border-radius:8px;background:rgba(255,255,255,.88);color:var(--ink);font-size:clamp(14px,1.5vw,16px);font-weight:700;letter-spacing:.04em}
 .hero .officeno b{font-size:clamp(18px,2vw,21px);letter-spacing:.06em;margin-left:6px}
 .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:13px 26px;border-radius:10px;
@@ -348,11 +348,9 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <img src="assets/hero.jpg" width="1448" height="1086" alt="スタッフに付き添われて歩く利用者">
   <div class="wrap">
     <div class="hero-copy">
-      <span class="open">2026.11.01 開設</span>
       <!-- ★チラシ（2026-10-02版）と同じキャッチコピー。スマホで変な位置で折り返さないよう、区切りごとに nb で包む -->
       <h1><span class="nb">あなたの</span><span class="nb"><em>「したい」</em>を</span><br><span class="nb">現実に</span></h1>
       <p class="sub"><span class="nb">暮らしの<em class="dk">「できる」</em>へ</span><span class="nb">道をつなぐ</span></p>
-      <p class="name">短時間専門デイケア　タクト・リハさかもと<span class="nb">（阪本病院 介護医療院内）</span></p>
       <p class="officeno" id="officeno">介護保険 事業所番号<b>37B0700016</b></p>
       <div class="hero-actions">
         <a class="btn" href="fees.html" data-now>料金を見る</a>
