@@ -108,6 +108,9 @@ section{padding:44px 0;scroll-margin-top:110px}
 .hero em{font-style:normal;color:var(--orange)}
 .hero em.dk{color:var(--green)}
 .hero .name{margin-top:8px;font-size:clamp(14px,1.6vw,18px);font-weight:700;color:var(--ink);text-shadow:0 1px 5px rgba(244,249,254,.9)}
+/* ★2026-11-12 本人指示：トップにも介護保険の事業所番号（数字は fees.json の officeNumber） */
+.hero .officeno{display:inline-block;margin-top:12px;padding:5px 14px;border:1.5px solid var(--ink);border-radius:8px;background:rgba(255,255,255,.88);color:var(--ink);font-size:clamp(14px,1.5vw,16px);font-weight:700;letter-spacing:.04em}
+.hero .officeno b{font-size:clamp(18px,2vw,21px);letter-spacing:.06em;margin-left:6px}
 .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:13px 26px;border-radius:10px;
   background:var(--deep);color:#fff;text-decoration:none;font-weight:700;font-size:16.5px;border:1px solid var(--deep);box-shadow:var(--shadow)}
@@ -350,6 +353,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
       <h1><span class="nb">あなたの</span><span class="nb"><em>「したい」</em>を</span><br><span class="nb">現実に</span></h1>
       <p class="sub"><span class="nb">暮らしの<em class="dk">「できる」</em>へ</span><span class="nb">道をつなぐ</span></p>
       <p class="name">短時間専門デイケア　タクト・リハさかもと<span class="nb">（阪本病院 介護医療院内）</span></p>
+      <p class="officeno" id="officeno">介護保険 事業所番号<b>37B0700016</b></p>
       <div class="hero-actions">
         <a class="btn" href="fees.html" data-now>料金を見る</a>
         <a class="btn" href="#availability" data-full>空き状況を見る</a>
@@ -559,13 +563,18 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
 
 <footer>
   短時間専門デイケア　タクト・リハさかもと（阪本病院 介護医療院内）<br>
-  2026年11月1日 開設
+  介護保険 事業所番号 <span id="officeno-foot">37B0700016</span>　2026年11月1日 開設
 </footer>
 
 <script>
 /* ★お問い合わせ先の電話番号（2026-10-02 本人の指示で掲載。チラシと同じ番号）。
    空にすると「準備中です」と表示され、番号を入れると自動でタップ発信のボタンになります。 */
 const TEL='0879-24-9030';
+
+/* 事業所番号は fees.json の officeNumber を正とする（HTMLの数字は読み込めなかったときの控え） */
+fetch('assets/fees.json').then(r=>r.json()).then(f=>{if(!f.officeNumber)return;
+  const a=document.querySelector('#officeno b'),b=document.getElementById('officeno-foot');
+  if(a)a.textContent=f.officeNumber; if(b)b.textContent=f.officeNumber;}).catch(()=>{});
 
 /* ★ご利用の時間（画面には label と time だけを出す。no はスプレッドシートの見出しと合わせる内部の印）。status を 'open' にするとその枠の空き状況が表示され、
    'planned' にすると下の「今後開設予定」の1行にまとめられます。 */
