@@ -44,6 +44,9 @@
 .fees .kicker-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .fees .officeno{margin:0 0 10px;font-size:17px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.04em}
 .fees .officeno b{font-size:24px;color:#fff;letter-spacing:.06em;margin-left:4px}
+.fees .officeno{margin-bottom:2px}
+.fees .officemail{margin:0 0 10px;font-size:15px;font-weight:700;color:rgba(255,255,255,.9);word-break:break-all}
+.fees .officemail a{color:#fff}
 .fees .doc .no{display:block;font-size:13.5px;font-weight:700;color:var(--deep);margin-top:2px}
 .fees .asof{font-size:12px;font-weight:700;color:rgba(255,255,255,.75);white-space:nowrap}
 .fees .nw{display:inline-block}

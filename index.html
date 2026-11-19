@@ -264,6 +264,8 @@ section{padding:44px 0;scroll-margin-top:110px}
 .tel-label{font-size:13.5px;color:rgba(255,255,255,.8);margin-bottom:4px}
 .tel-link{display:block;font-size:31px;font-weight:800;color:#fff;text-decoration:none}
 .tel-cta{display:block;margin-top:12px;background:var(--orange);color:#fff;text-decoration:none;font-weight:700;padding:14px;border-radius:10px}
+.mail-row{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.22)}
+.mail-link{display:inline-block;font-size:17px;font-weight:700;color:#fff;word-break:break-all}
 /* ---------- 「料金だけ」の期間の切り替え（data-phase） ---------- */
 [data-phase="fees-only"] section[data-later],
 [data-phase="fees-only"] [data-full]{display:none}
@@ -552,7 +554,7 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
   <div class="wrap">
     <div class="kicker">CONTACT</div>
     <h2>お問い合わせ</h2>
-    <p class="prose">ご不明な点、ご利用のご相談は、お電話でお問い合わせください。<br>「デイケアについて」とお申し付けください。担当スタッフが対応いたします。</p>
+    <p class="prose">ご不明な点、ご利用のご相談は、お電話またはメールでお問い合わせください。<br>「デイケアについて」とお申し付けください。担当スタッフが対応いたします。</p>
     <div class="telbox" id="tel-area"></div>
   </div>
 </section>
@@ -568,6 +570,8 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
 /* ★お問い合わせ先の電話番号（2026-10-02 本人の指示で掲載。チラシと同じ番号）。
    空にすると「準備中です」と表示され、番号を入れると自動でタップ発信のボタンになります。 */
 const TEL='0879-24-9030';
+/* ★メールアドレス（2026-11-19 本人の指示で掲載。チラシには載せない）。空にすると出ません。 */
+const MAIL='takutoreha@sakamoto-hosp.or.jp';
 
 /* 事業所番号は fees.json の officeNumber を正とする（HTMLの数字は読み込めなかったときの控え） */
 fetch('assets/fees.json').then(r=>r.json()).then(f=>{if(!f.officeNumber)return;
@@ -595,7 +599,8 @@ function renderTel(){
     return;
   }
   const href='tel:'+TEL.replace(/[^0-9+]/g,'');
-  area.innerHTML=`<p class="tel-label">阪本病院 介護医療院内</p><a class="tel-link" href="${href}">${TEL}</a><a class="tel-cta" href="${href}">タップして電話をかける</a>`;
+  area.innerHTML=`<p class="tel-label">阪本病院 介護医療院内</p><a class="tel-link" href="${href}">${TEL}</a><a class="tel-cta" href="${href}">タップして電話をかける</a>`
+    +(MAIL?`<div class="mail-row"><p class="tel-label">メール</p><a class="mail-link" href="mailto:${MAIL}">${MAIL}</a></div>`:'');
 }
 
 /* 「料金だけ」の期間に出す、ご利用の時間（空き枠の数は出さない） */
