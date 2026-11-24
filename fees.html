@@ -209,12 +209,14 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
         <div class="field"><span class="lab">負担割合</span><div class="seg" data-burden-seg></div></div>
         <div class="field" id="f-course"><label for="c-course">ご利用の時間</label><select id="c-course"></select></div>
         <div class="field" id="f-visits"><label for="c-visits">ひと月の回数</label><select id="c-visits"></select></div>
+        <div class="field wide"><span class="lab">退院（退所）して3か月以内ですか</span><div class="seg" id="c-discharge"></div><p class="d-note" id="c-discharge-note"></p></div>
       </div>
       <div class="result" aria-live="polite">
         <p class="t">ひと月の自己負担の目安</p>
         <p class="v" id="r-value">—</p>
         <p class="s" id="r-sub"></p>
       </div>
+      <div class="r-addons" id="r-addons"></div>
       <p class="caption">ご利用の回数は、担当のケアマネジャーと相談して決まります。</p>
       <details class="breakdown">
         <summary>計算の内訳を見る</summary>

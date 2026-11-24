@@ -165,3 +165,14 @@
 .fees .plus b{font-weight:800}
 .fees .plus .yen{margin-left:auto;font-size:20px}
 .fees .table .yen{font-size:23px}
+
+/* ★2026-11-24 退院（退所）して3か月以内の選択と、目安に入っている加算の一覧 */
+.fees .field.wide{grid-column:1/-1}
+.fees .field .d-note{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.6}
+.fees .r-addons{margin-top:12px;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.fees .r-addons .ra-head{font-size:13.5px;font-weight:700;color:var(--deep);margin-bottom:4px}
+.fees .r-addons ul{list-style:none;margin:0;padding:0}
+.fees .r-addons li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px dashed var(--line);font-size:14.5px;font-weight:500}
+.fees .r-addons li:first-child{border-top:0}
+.fees .r-addons li small{flex:none;color:var(--muted);font-size:13px}
+.fees .r-addons .ra-note{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.6}
