@@ -129,15 +129,48 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <p class="lead prose">介護保険が使えます。</p>
     <div class="unitbox" id="unitbox"></div>
     <nav class="jump" aria-label="このページの中">
+      <a href="#calc">ひと月の計算</a>
       <a href="#care">要介護の方</a>
       <a href="#support">要支援の方</a>
-      <a href="#calc">ひと月の計算</a>
       <a href="#documents">書類</a>
     </nav>
   </div>
 </div>
 
 <main data-fees-app>
+
+<!-- ===================== 計算 ===================== -->
+<!-- ★2026-11-24 本人指示：シミュレーションをいちばん上に（選べば一目で分かるので） -->
+<section id="calc" class="alt">
+  <div class="wrap">
+    <div class="kicker">SIMULATION</div>
+    <h2 class="h2">ひと月の目安を計算する</h2>
+    <p class="lead prose">選ぶと、ひと月の目安が出ます。</p>
+    <div class="calc">
+      <div class="fields">
+        <div class="field"><label for="c-level">介護度</label><select id="c-level"></select></div>
+        <div class="field"><span class="lab">負担割合</span><div class="seg" data-burden-seg></div></div>
+        <div class="field" id="f-course"><label for="c-course">ご利用の時間</label><select id="c-course"></select></div>
+        <div class="field" id="f-visits"><label for="c-visits">ひと月の回数</label><select id="c-visits"></select><p class="d-note" id="c-visits-note"></p></div>
+        <div class="field wide"><span class="lab">退院（退所）して3か月以内ですか</span><div class="seg" id="c-discharge"></div><p class="d-note" id="c-discharge-note"></p></div>
+        <div class="field wide" id="f-area"><span class="lab">お住まいは次の地域ですか（中山間地域）</span><p class="area-list" id="c-area-list"></p><div class="seg" id="c-area"></div><p class="d-note">「はい」にすると、中山間地域等に居住する者へのサービス提供加算（基本の5％）を入れて計算します。</p></div>
+      </div>
+      <div class="result" aria-live="polite">
+        <p class="t">ひと月のお支払いの目安</p>
+        <p class="v" id="r-value">—</p>
+        <p class="s" id="r-sub"></p>
+        <p class="split" id="r-split"></p>
+      </div>
+      <div class="r-addons" id="r-addons"></div>
+      <p class="caption">ご利用の回数は、担当のケアマネジャーと相談して決まります。</p>
+      <details class="breakdown">
+        <summary>計算の内訳を見る</summary>
+        <table class="bd" id="r-bd"></table>
+        <p class="caption" id="r-cond"></p>
+      </details>
+    </div>
+  </div>
+</section>
 
 <!-- ===================== 要介護（通所リハビリテーション） ===================== -->
 <section id="care">
@@ -194,36 +227,6 @@ footer{background:#0b1a6b;color:rgba(255,255,255,.62);font-size:12.5px;padding:2
     <h2 class="h2">加算の一覧（要支援・要介護のちがい）</h2>
     <p class="lead prose">○の方にかかります。<span class="cond">条件あり</span>は、当てはまる方だけです。</p>
     <table class="matrix" id="addon-matrix"></table>
-  </div>
-</section>
-
-<!-- ===================== 計算 ===================== -->
-<section id="calc">
-  <div class="wrap">
-    <div class="kicker">SIMULATION</div>
-    <h2 class="h2">ひと月の目安を計算する</h2>
-    <p class="lead prose">選ぶと、ひと月の目安が出ます。</p>
-    <div class="calc">
-      <div class="fields">
-        <div class="field"><label for="c-level">介護度</label><select id="c-level"></select></div>
-        <div class="field"><span class="lab">負担割合</span><div class="seg" data-burden-seg></div></div>
-        <div class="field" id="f-course"><label for="c-course">ご利用の時間</label><select id="c-course"></select></div>
-        <div class="field" id="f-visits"><label for="c-visits">ひと月の回数</label><select id="c-visits"></select></div>
-        <div class="field wide"><span class="lab">退院（退所）して3か月以内ですか</span><div class="seg" id="c-discharge"></div><p class="d-note" id="c-discharge-note"></p></div>
-      </div>
-      <div class="result" aria-live="polite">
-        <p class="t">ひと月の自己負担の目安</p>
-        <p class="v" id="r-value">—</p>
-        <p class="s" id="r-sub"></p>
-      </div>
-      <div class="r-addons" id="r-addons"></div>
-      <p class="caption">ご利用の回数は、担当のケアマネジャーと相談して決まります。</p>
-      <details class="breakdown">
-        <summary>計算の内訳を見る</summary>
-        <table class="bd" id="r-bd"></table>
-        <p class="caption" id="r-cond"></p>
-      </details>
-    </div>
   </div>
 </section>
 

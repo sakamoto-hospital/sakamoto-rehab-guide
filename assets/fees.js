@@ -1,6 +1,6 @@
 /* 料金はすべて assets/fees.json から。ここには計算のしかたと見せ方だけを書く */
 const yen=n=>n.toLocaleString('ja-JP');
-const state={burden:1, level:'要介護1', course:0, visits:4, discharge:false};
+const state={burden:1, level:'要介護1', course:0, visits:4, discharge:false, area:false};
 let FEES=null;
 
 /* 国保連の請求と同じ手順で計算する
@@ -157,55 +157,88 @@ function renderCalc(){
     vi.addEventListener('change',()=>{state.visits=+vi.value;renderCalc()});
   }
   const isSupport=kindOf(state.level)==='support';
-  for(const id of ['f-course','f-visits'])document.getElementById(id).style.opacity=isSupport?.45:1;
-  vi.disabled=co.disabled=isSupport;
+  // 要支援は回数で保険の金額は変わらないが、教養娯楽費（1回ごと）の計算に回数を使う
+  document.getElementById('f-course').style.opacity=isSupport?.45:1;
+  co.disabled=isSupport;
+  document.getElementById('c-visits-note').textContent=isSupport?'要支援の方は、回数は教養娯楽費（1回ごと）の計算にだけ使います。':'';
   const kind=isSupport?'support':'care';
+
+  /* はい／いいえの切り替え（退院・中山間地域） */
+  const yesNo=(id,key)=>document.getElementById(id).replaceChildren(...[[false,'いいえ'],[true,'はい']].map(([v,t])=>{
+    const b=document.createElement('button');b.type='button';b.textContent=t;
+    b.setAttribute('aria-pressed',String(state[key]===v));
+    b.addEventListener('click',()=>{state[key]=v;renderCalc()});
+    return b;
+  }));
 
   /* ★2026-11-24 本人指示：「退院（退所）して3か月以内」を選ぶと、退院時共同指導加算と
      短期集中個別リハビリテーション実施加算（要介護のみ）も計算に入れる。どれが対象かは fees.json の discharge */
-  const dSeg=document.getElementById('c-discharge');
-  dSeg.replaceChildren(...[[false,'いいえ'],[true,'はい']].map(([v,t])=>{
-    const b=document.createElement('button');b.type='button';b.textContent=t;
-    b.setAttribute('aria-pressed',String(state.discharge===v));
-    b.addEventListener('click',()=>{state.discharge=v;renderCalc()});
-    return b;
-  }));
+  yesNo('c-discharge','discharge');
   const dAddons=FEES[kind].addons.filter(a=>a.discharge&&a.status!=='pending');
   document.getElementById('c-discharge-note').textContent=
     `「はい」にすると、${dAddons.map(a=>a.name).join('と')}を入れて計算します。`+
     (isSupport?'（短期集中個別リハビリテーション実施加算は要介護の方のみです）':'');
 
+  /* ★2026-11-24 本人指示：中山間地域（fees.json の area に書いた地域）にお住まいかを選ぶ */
+  const areaAddon=FEES[kind].addons.find(a=>a.area&&a.status!=='pending');
+  document.getElementById('f-area').hidden=!areaAddon;
+  if(areaAddon){
+    yesNo('c-area','area');
+    document.getElementById('c-area-list').textContent=areaAddon.area;
+  }
+
   const rows=[];let units=0;
   const add=(k,v)=>{rows.push([k,v]);units+=v};
-  const used=[];   // 目安に入れた加算（結果の下に一覧で出す）
+  const used=[];   // 目安に入れた加算（結果の下に一覧で出す）[名前, いくつ分, 説明]
+  const use=(a,v)=>used.push([a.name,v,a.note]);
   const useD=state.discharge?dAddons:[];
+  const useA=state.area&&areaAddon?[areaAddon]:[];
+  const n=state.visits;
   if(isSupport){
-    add(`${FEES.support.label}（${state.level}）`,FEES.support.units[state.level]);
-    addons('support','month').forEach(a=>{add(a.name,addonUnits(a,state.level));used.push([a.name,'ひと月']);});
+    const base=FEES.support.units[state.level];
+    add(`${FEES.support.label}（${state.level}）`,base);
+    addons('support','month').forEach(a=>{add(a.name,addonUnits(a,state.level));use(a,'ひと月');});
+    useA.forEach(a=>{const u=Math.round(base*a.pct/100);add(`${a.name}（基本の${a.pct}％）`,u);use(a,'ひと月');});
     useD.forEach(a=>{
-      if(a.per==='once'){add(`${a.name}（1回）`,addonUnits(a,state.level));used.push([a.name,'1回']);}
-      else if(a.per==='month'){add(`${a.name}（ひと月）`,addonUnits(a,state.level));used.push([a.name,'ひと月']);}
+      if(a.per==='once'){add(`${a.name}（1回）`,addonUnits(a,state.level));use(a,'1回');}
+      else if(a.per==='month'){add(`${a.name}（ひと月）`,addonUnits(a,state.level));use(a,'ひと月');}
     });
   }else{
-    const c=FEES.courses[state.course], n=state.visits, base=FEES.care.units[state.level];
+    const c=FEES.courses[state.course], base=FEES.care.units[state.level];
     add(`通所リハビリテーション費（${state.level}） ${base}単位 × ${n}回`,base*n);
-    addons('care','visit').forEach(a=>{add(`${a.name} ${a.units}単位 × ${n}回`,a.units*n);used.push([a.name,`${n}回分`]);});
-    useD.filter(a=>a.per==='visit').forEach(a=>{add(`${a.name} ${addonUnits(a,state.level)}単位 × ${n}回`,addonUnits(a,state.level)*n);used.push([a.name,`${n}回分`]);});
+    addons('care','visit').forEach(a=>{add(`${a.name} ${a.units}単位 × ${n}回`,a.units*n);use(a,`${n}回分`);});
+    useD.filter(a=>a.per==='visit').forEach(a=>{add(`${a.name} ${addonUnits(a,state.level)}単位 × ${n}回`,addonUnits(a,state.level)*n);use(a,`${n}回分`);});
+    useA.forEach(a=>{const u=Math.round(base*a.pct/100);add(`${a.name}（基本の${a.pct}％） ${u}単位 × ${n}回`,u*n);use(a,`${n}回分`);});
     if(!c.ride)add(`送迎を行わない場合 ${FEES.care.noRide.units}単位 × 往復 × ${n}回`,-noRideUnits()*n);
-    addons('care','month').forEach(a=>{add(`${a.name}（ひと月）`,a.units);used.push([a.name,'ひと月']);});
-    useD.filter(a=>a.per==='once').forEach(a=>{add(`${a.name}（1回）`,addonUnits(a,state.level));used.push([a.name,'1回']);});
+    addons('care','month').forEach(a=>{add(`${a.name}（ひと月）`,a.units);use(a,'ひと月');});
+    useD.filter(a=>a.per==='once').forEach(a=>{add(`${a.name}（1回）`,addonUnits(a,state.level));use(a,'1回');});
   }
-  if(FEES.treatment?.status==='confirmed')used.push([FEES.treatment.name+FEES.treatment.rateLabel,`合計の${pct()}`]);
-  document.getElementById('r-addons').innerHTML=
-    `<p class="ra-head">この目安に入っている加算</p><ul>`+
-    used.map(([k,v])=>`<li><span>${k}</span><small>${v}</small></li>`).join('')+'</ul>'+
-    (useD.length?`<p class="ra-note">退院時共同指導加算は、退院前のカンファレンスに参加した場合に、はじめの月に1回だけかかります。${isSupport?'':'短期集中個別リハビリテーション実施加算は、退院（退所）日から3か月以内の間だけかかります。'}</p>`:'');
+  if(FEES.treatment?.status==='confirmed')used.push([FEES.treatment.name+FEES.treatment.rateLabel,`合計の${pct()}`,FEES.treatment.note]);
+
+  /* ★2026-11-24 本人指示：介護保険以外の費用（教養娯楽費 1回ごと）も合計に入れる。km ごとの交通費は下に注記だけ */
+  const extras=FEES.extras.filter(x=>x.per==='1回').map(x=>({name:x.name,price:x.price,yen:x.price*n,note:x.note}));
+  const extraYen=extras.reduce((s,x)=>s+x.yen,0);
+  const kmExtras=FEES.extras.filter(x=>x.per!=='1回');
+
   const b=bill(units);
-  document.getElementById('r-value').innerHTML=`約 ${yen(b.self)}<small>円</small>`;
+  const grand=b.self+extraYen;
+  document.getElementById('r-value').innerHTML=`約 ${yen(grand)}<small>円</small>`;
   document.getElementById('r-sub').textContent=(isSupport
-    ?`${state.level}・${state.burden}割負担・ひと月（回数にかかわらず定額）`
-    :`${state.level}・${state.burden}割負担・${FEES.courses[state.course].ride?'送迎あり':'送迎なし'}・ひと月${state.visits}回`)
-    +(state.discharge?'・退院後3か月以内':'');
+    ?`${state.level}・${state.burden}割負担・ひと月${n}回`
+    :`${state.level}・${state.burden}割負担・${FEES.courses[state.course].ride?'送迎あり':'送迎なし'}・ひと月${n}回`)
+    +(state.discharge?'・退院後3か月以内':'')+(useA.length?'・中山間地域':'');
+  document.getElementById('r-split').innerHTML=
+    `<span>介護保険の自己負担 ${yen(b.self)}円</span>`+extras.map(x=>`<span>${x.name} ${yen(x.yen)}円</span>`).join('');
+
+  // ★加算の名前を押すと説明が開く（上の「加算の一覧」と同じ形）
+  document.getElementById('r-addons').innerHTML=
+    `<p class="ra-head">この目安に入っている加算<span class="tap">（名前を押すと説明）</span></p><ul>`+
+    used.map(([k,v,note])=>`<li><details><summary><span>${k}</span><small>${v}</small></summary>${note?`<p>${note}</p>`:''}</details></li>`).join('')+'</ul>'+
+    (extras.length?`<p class="ra-head ra-gap">介護保険以外の費用</p><ul>`+
+      extras.map(x=>`<li><details><summary><span>${x.name}</span><small>${yen(x.price)}円 × ${n}回</small></summary>${x.note?`<p>${x.note}</p>`:''}</details></li>`).join('')+'</ul>':'')+
+    (useD.length?`<p class="ra-note">退院時共同指導加算は、退院前のカンファレンスに参加した場合に、はじめの月に1回だけかかります。${isSupport?'':'短期集中個別リハビリテーション実施加算は、退院（退所）日から3か月以内の間だけかかります。'}</p>`:'')+
+    kmExtras.map(x=>`<p class="ra-note">${x.name}（${yen(x.price)}円／${x.per}）は、${x.note.replace(/について。?$/,'')}だけ別にかかります（この目安には入っていません）。</p>`).join('');
+
   const tr=(a,v,c='')=>`<tr class="${c}"><td>${a}</td><td>${v}</td></tr>`;
   document.getElementById('r-bd').innerHTML=
     rows.map(([k,v])=>tr(k,(v<0?'−':'')+yen(Math.abs(v))+'単位')).join('')+
@@ -213,9 +246,11 @@ function renderCalc(){
     tr('単位の合計',yen(b.total)+'単位','sum')+
     tr(`費用の総額（1単位＝${FEES.unitPrice}円）`,yen(b.cost)+'円')+
     tr(`介護保険から支払われる分（${10-state.burden}割）`,'−'+yen(b.cost-b.self)+'円')+
-    tr(`お支払いいただく分（${state.burden}割）`,yen(b.self)+'円','sum');
-  // 条件つきの加算・減算は目安に入れていないことを、どれが当てはまり得るかと一緒に書く
-  const cond=FEES[kind].addons.filter(a=>a.status==='conditional'&&!useD.includes(a)).map(a=>`${a.name}（${amountOf(a)}）`);
+    tr(`介護保険の自己負担（${state.burden}割）`,yen(b.self)+'円','sum')+
+    extras.map(x=>tr(`${x.name} ${yen(x.price)}円 × ${n}回`,yen(x.yen)+'円')).join('')+
+    (extras.length?tr('ひと月のお支払いの合計',yen(grand)+'円','sum'):'');
+  // 条件つきの加算・減算で、上の選択に出ていないものだけを「含めていないもの」に書く
+  const cond=FEES[kind].addons.filter(a=>a.status==='conditional'&&!a.discharge&&!a.area).map(a=>`${a.name}（${amountOf(a)}）`);
   if(isSupport&&FEES.support.over12Months)cond.push(`12か月を超えた場合の減算（${state.level} −${FEES.support.over12Months[state.level]}単位）`);
   document.getElementById('r-cond').innerHTML=cond.length
     ?`<b>この目安に含めていないもの</b>（条件に当てはまる方だけにかかります）：${cond.join('、')}`:'';
